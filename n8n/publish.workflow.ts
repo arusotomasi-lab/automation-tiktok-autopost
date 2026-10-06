@@ -21,7 +21,7 @@ const config = node({
       assignments: {
         assignments: [
           { id: 'cfg-channel', name: 'bufferChannelId', value: 'REPLACE_WITH_BUFFER_TIKTOK_CHANNEL_ID', type: 'string' },
-          { id: 'cfg-owner', name: 'ownerChatId', value: 'REPLACE_WITH_YOUR_TELEGRAM_CHAT_ID', type: 'string' },
+          { id: 'cfg-owner', name: 'ownerChatId', value: '2008311661', type: 'string' },
           { id: 'cfg-batch', name: 'maxPerRun', value: 3, type: 'number' }
         ]
       }
