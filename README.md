@@ -11,7 +11,7 @@ Otomasi posting video TikTok: **Telegram → Cloudflare R2 + Gemini → Supabase
 n8n 1. Ingest ──► Download file Telegram ──┬─► Upload ke R2 (videos/yyyy/MM/dd/<id>.mp4)
                                            └─► Gemini (video analyze) → caption + hashtag JSON
                   ──► Supabase tiktok_posts (status=ready, scheduled_at)
-                  ──► Balas konfirmasi di Telegram
+                  ──► Kirim laporan ke Telegram (judul, caption, hashtag, link video)
 
 n8n 2. Publish (tiap 1 menit)
         ──► ambil maks 3 baris ready & jatuh tempo ──► kunci (status=scheduled, attempts+1)
@@ -28,6 +28,10 @@ n8n 2. Publish (tiap 1 menit)
 | n8n | `TikTok Autopost — 1. Ingest` (`qbvS8aQsVwvHzURm`), `TikTok Autopost — 2. Publish` (`JYX8Kd4ZX2JuLSkH`) |
 | Gemini | node Google Gemini, model `models/gemini-flash-latest` |
 | Buffer | `https://api.buffer.com` (GraphQL) |
+
+## Mode saat ini: laporan saja
+
+Auto-post ke TikTok **dinonaktifkan** (workflow Publish tidak aktif). Setiap video yang dikirim ke bot diupload ke R2, Gemini membuat judul + caption + hashtag, data disimpan di Supabase (`status = ready`), lalu bot mengirim laporan ke Telegram. Untuk mengaktifkan posting nanti: perbaiki credential Buffer, isi `bufferChannelId`, lalu publish workflow 2.
 
 ## Status (`tiktok_posts.status`)
 

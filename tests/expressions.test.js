@@ -15,3 +15,12 @@ assert.strictEqual('{' + lit + '}', '{"#fyp","#ab"}');
 // schedule regex
 const m = 'resep @2026-10-07 19:00'.match(/@(\d{4}-\d{2}-\d{2} \d{2}:\d{2})/); assert.strictEqual(m[1], '2026-10-07 19:00');
 console.log('ALL OK');
+
+// Title-aware parser (Ingest "Parse Caption Gemini")
+function parse2(text, u){ try { const t = (text ?? '').replace(/```json|```/g, '').trim(); const o = JSON.parse(t.slice(t.indexOf('{'), t.lastIndexOf('}') + 1)); return { title: String(o.title ?? '').slice(0, 100), caption: String(o.caption ?? ''), hashtags: Array.isArray(o.hashtags) ? o.hashtags.map(h => (String(h).startsWith('#') ? String(h) : '#' + h).replace(/\s+/g, '')) : [] }; } catch (e) { return { title: (u || 'Video baru').slice(0, 60), caption: u || 'Video baru 🎬', hashtags: ['#fyp'] }; } }
+assert.deepStrictEqual(parse2('{"title":"Nasi Goreng Kilat","caption":"Cuma 5 menit!","hashtags":["fyp"]}'), {title:'Nasi Goreng Kilat',caption:'Cuma 5 menit!',hashtags:['#fyp']});
+assert.deepStrictEqual(parse2('error', 'resep nasi'), {title:'resep nasi',caption:'resep nasi',hashtags:['#fyp']});
+// Telegram HTML escaping used in report
+const esc = s => (s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;');
+assert.strictEqual(esc('A & B <3'), 'A &amp; B &lt;3');
+console.log('ALL OK (title/report)');

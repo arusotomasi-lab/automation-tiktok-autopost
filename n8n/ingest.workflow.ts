@@ -115,7 +115,7 @@ const geminiCaption = node({
       modelId: { __rl: true, mode: 'id', value: 'models/gemini-flash-latest' },
       inputType: 'binary',
       binaryPropertyName: 'data',
-      text: expr("Kamu adalah copywriter TikTok Indonesia. Tonton video ini lalu buat caption TikTok yang menarik (maks 150 karakter, boleh 1-2 emoji, ada hook di awal) dan 3-6 hashtag relevan termasuk #fyp. Catatan dari pemilik: \"{{ $('Siapkan Metadata').item.json.userCaption }}\". Balas HANYA JSON valid tanpa markdown dengan format: {\"caption\": \"...\", \"hashtags\": [\"#fyp\", \"...\"]}"),
+      text: expr("Kamu adalah copywriter TikTok Indonesia. Tonton video ini lalu buat: (1) judul singkat yang menarik (maks 60 karakter), (2) caption TikTok (maks 150 karakter, ada hook di awal, boleh 1-2 emoji), (3) 3-6 hashtag relevan termasuk #fyp. Catatan dari pemilik: \"{{ $('Siapkan Metadata').item.json.userCaption }}\". Balas HANYA JSON valid tanpa markdown dengan format: {\"title\": \"...\", \"caption\": \"...\", \"hashtags\": [\"#fyp\", \"...\"]}"),
       simplify: true,
       options: { maxOutputTokens: 600 }
     },
@@ -140,7 +140,7 @@ const prepareRow = node({
       assignments: {
         assignments: [
           { id: 'p-raw', name: 'geminiText', value: expr("{{ $('Gemini Buat Caption').item.json.content?.parts?.[0]?.text ?? $('Gemini Buat Caption').item.json.text ?? '' }}"), type: 'string' },
-          { id: 'p-obj', name: 'ai', value: expr("{{ (() => { try { const t = ($('Gemini Buat Caption').item.json.content?.parts?.[0]?.text ?? $('Gemini Buat Caption').item.json.text ?? '').replace(/```json|```/g, '').trim(); const o = JSON.parse(t.slice(t.indexOf('{'), t.lastIndexOf('}') + 1)); return { caption: String(o.caption ?? ''), hashtags: Array.isArray(o.hashtags) ? o.hashtags.map(h => (String(h).startsWith('#') ? String(h) : '#' + h).replace(/\\s+/g, '')) : [] }; } catch (e) { return { caption: $('Siapkan Metadata').item.json.userCaption || 'Video baru 🎬', hashtags: ['#fyp'] }; } })() }}"), type: 'object' },
+          { id: 'p-obj', name: 'ai', value: expr("{{ (() => { try { const t = ($('Gemini Buat Caption').item.json.content?.parts?.[0]?.text ?? $('Gemini Buat Caption').item.json.text ?? '').replace(/```json|```/g, '').trim(); const o = JSON.parse(t.slice(t.indexOf('{'), t.lastIndexOf('}') + 1)); return { title: String(o.title ?? '').slice(0, 100), caption: String(o.caption ?? ''), hashtags: Array.isArray(o.hashtags) ? o.hashtags.map(h => (String(h).startsWith('#') ? String(h) : '#' + h).replace(/\\s+/g, '')) : [] }; } catch (e) { const u = $('Siapkan Metadata').item.json.userCaption; return { title: (u || 'Video baru').slice(0, 60), caption: u || 'Video baru 🎬', hashtags: ['#fyp'] }; } })() }}"), type: 'object' },
           { id: 'p-ok', name: 'geminiOk', value: expr("{{ !$('Gemini Buat Caption').item.json.error }}"), type: 'boolean' }
         ]
       }
@@ -166,6 +166,7 @@ const saveRow = node({
           { fieldId: 'telegram_file_id', fieldValue: expr("{{ $('Siapkan Metadata').item.json.fileId }}") },
           { fieldId: 'r2_key', fieldValue: expr("{{ $('Siapkan Metadata').item.json.r2Key }}") },
           { fieldId: 'video_url', fieldValue: expr("{{ $('Siapkan Metadata').item.json.r2PublicBaseUrl.replace(/\\/$/, '') + '/' + $('Siapkan Metadata').item.json.r2Key }}") },
+          { fieldId: 'title', fieldValue: expr('{{ $json.ai.title }}') },
           { fieldId: 'caption', fieldValue: expr('{{ $json.ai.caption }}') },
           { fieldId: 'hashtags', fieldValue: expr("{{ '{' + $json.ai.hashtags.map(h => '\"' + h.replace(/\"/g, '') + '\"').join(',') + '}' }}") },
           { fieldId: 'gemini_raw', fieldValue: expr('{{ JSON.stringify({ text: $json.geminiText, ok: $json.geminiOk }) }}') },
@@ -183,12 +184,12 @@ const replyOk = node({
   type: 'n8n-nodes-base.telegram',
   version: 1.2,
   config: {
-    name: 'Balas Konfirmasi',
+    name: 'Kirim Laporan Telegram',
     parameters: {
       resource: 'message',
       operation: 'sendMessage',
       chatId: expr("{{ $('Siapkan Metadata').item.json.chatId }}"),
-      text: expr("✅ Video diterima & disimpan.\n\n📝 Caption: {{ $json.caption }}\n🏷️ {{ ($json.hashtags || []).join(' ') }}\n⏰ Jadwal: {{ DateTime.fromISO($json.scheduled_at).setZone('Asia/Jakarta').toFormat('dd LLL yyyy HH:mm') }} WIB\n🆔 {{ $json.id }}"),
+      text: expr("📊 <b>LAPORAN VIDEO</b>\n\n✅ Status: Berhasil diupload ke penyimpanan (Cloudflare R2) &amp; siap diposting\n⚠️ Belum diposting ke TikTok (auto-post dinonaktifkan)\n\n🎬 <b>Judul:</b> {{ ($json.title ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;') }}\n📝 <b>Caption:</b> {{ ($json.caption ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;') }}\n🏷️ <b>Hashtag:</b> {{ ($json.hashtags || []).join(' ') }}\n\n🔗 Video: {{ $json.video_url }}\n🆔 ID: {{ $json.id }}\n🕒 {{ DateTime.fromISO($json.created_at).setZone('Asia/Jakarta').toFormat('dd LLL yyyy HH:mm') }} WIB"),
       additionalFields: { appendAttribution: false, parse_mode: 'HTML' }
     },
     credentials: { telegramApi: newCredential('Telegram Bot') }
