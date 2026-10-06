@@ -1,4 +1,4 @@
-import { workflow, node, trigger, sticky, newCredential, merge, expr } from '@n8n/workflow-sdk';
+import { workflow, node, trigger, sticky, newCredential, merge, ifElse, expr } from '@n8n/workflow-sdk';
 
 const telegramIn = trigger({
   type: 'n8n-nodes-base.telegramTrigger',
@@ -66,6 +66,7 @@ const buildMeta = node({
           { id: 'm-chat', name: 'chatId', value: expr("{{ $('Telegram Video Masuk').item.json.message.chat.id }}"), type: 'string' },
           { id: 'm-hint', name: 'userCaption', value: expr("{{ $('Telegram Video Masuk').item.json.message.caption ?? '' }}"), type: 'string' },
           { id: 'm-key', name: 'r2Key', value: expr("{{ 'videos/' + $now.toFormat('yyyy/MM/dd') + '/' + ($('Telegram Video Masuk').item.json.message.video?.file_unique_id ?? $('Telegram Video Masuk').item.json.message.document.file_unique_id) + '.mp4' }}"), type: 'string' },
+          { id: 'm-size', name: 'fileSize', value: expr("{{ $('Telegram Video Masuk').item.json.message.video?.file_size ?? $('Telegram Video Masuk').item.json.message.document?.file_size ?? 0 }}"), type: 'number' },
           { id: 'm-when', name: 'scheduledAt', value: expr("{{ (() => { const m = ($('Telegram Video Masuk').item.json.message.caption ?? '').match(/@(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2})/); return m ? DateTime.fromFormat(m[1], 'yyyy-MM-dd HH:mm', { zone: 'Asia/Jakarta' }).toISO() : $now.plus($('Config').item.json.defaultDelayMinutes, 'minutes').toISO(); })() }}"), type: 'string' }
         ]
       }
@@ -74,11 +75,61 @@ const buildMeta = node({
   output: [{ fileId: 'BAACAgUAAx', fileUniqueId: 'AgADxyz', chatId: '123456789', userCaption: 'tips masak cepat', r2Key: 'videos/2026/10/06/AgADxyz.mp4', scheduledAt: '2026-10-06T17:00:00.000+07:00', r2Bucket: 'tiktok-auto-post', r2PublicBaseUrl: 'https://pub-xxx.r2.dev' }]
 });
 
+const sizeOk = ifElse({
+  version: 2.2,
+  config: {
+    name: 'Ukuran ≤ 20MB?',
+    parameters: {
+      conditions: {
+        options: { caseSensitive: true, leftValue: '', typeValidation: 'loose' },
+        conditions: [{ leftValue: expr('{{ $json.fileSize }}'), operator: { type: 'number', operation: 'lte' }, rightValue: 20000000 }],
+        combinator: 'and'
+      }
+    }
+  },
+  output: [{ fileSize: 2436174 }]
+});
+
+const notifyTooBig = node({
+  type: 'n8n-nodes-base.telegram',
+  version: 1.2,
+  config: {
+    name: 'Notif Video Terlalu Besar',
+    parameters: {
+      resource: 'message',
+      operation: 'sendMessage',
+      chatId: expr('{{ $json.chatId }}'),
+      text: expr("⚠️ <b>Video terlalu besar</b> ({{ ($json.fileSize / 1048576).toFixed(1) }} MB)\n\nBot Telegram hanya bisa mengambil file maksimal 20 MB.\nSolusi: kirim sebagai <b>Video</b> biasa (bukan File/Dokumen) supaya Telegram mengompresnya otomatis, atau kompres dulu videonya."),
+      additionalFields: { appendAttribution: false, parse_mode: 'HTML' }
+    },
+    credentials: { telegramApi: newCredential('Telegram Bot') }
+  },
+  output: [{ ok: true }]
+});
+
+const notifyDownloadFail = node({
+  type: 'n8n-nodes-base.telegram',
+  version: 1.2,
+  config: {
+    name: 'Notif Gagal Download',
+    parameters: {
+      resource: 'message',
+      operation: 'sendMessage',
+      chatId: expr("{{ $('Siapkan Metadata').item.json.chatId }}"),
+      text: expr("❌ <b>Gagal mengambil video dari Telegram</b>\n\nError: {{ ($json.error?.message ?? $json.error ?? 'unknown').toString().replace(/</g,'&lt;').slice(0, 300) }}\n\nCoba kirim ulang videonya."),
+      additionalFields: { appendAttribution: false, parse_mode: 'HTML' }
+    },
+    credentials: { telegramApi: newCredential('Telegram Bot') }
+  },
+  output: [{ ok: true }]
+});
+
 const downloadVideo = node({
   type: 'n8n-nodes-base.telegram',
   version: 1.2,
   config: {
     name: 'Download Video Telegram',
+    onError: 'continueErrorOutput',
     parameters: { resource: 'file', operation: 'get', fileId: expr('{{ $json.fileId }}'), download: true, additionalFields: { mimeType: 'video/mp4' } },
     credentials: { telegramApi: newCredential('Telegram Bot') }
   },
@@ -127,6 +178,9 @@ const geminiCaption = node({
   config: {
     name: 'Gemini Buat Caption',
     onError: 'continueRegularOutput',
+    retryOnFail: true,
+    maxTries: 5,
+    waitBetweenTries: 5000,
     parameters: {
       resource: 'video',
       operation: 'analyze',
@@ -222,7 +276,7 @@ export default workflow('tiktok-ingest', 'TikTok Autopost — 1. Ingest (Telegra
   .to(config)
   .to(onlyOwnerVideo)
   .to(buildMeta)
-  .to(downloadVideo)
+  .to(sizeOk.onTrue(downloadVideo.onError(notifyDownloadFail)).onFalse(notifyTooBig))
   .add(downloadVideo)
   .to(uploadR2.to(joinResults.input(0)))
   .add(uploadR2)
