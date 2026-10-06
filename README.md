@@ -33,6 +33,10 @@ n8n 2. Publish (tiap 1 menit)
 
 Auto-post ke TikTok **dinonaktifkan** (workflow Publish tidak aktif). Setiap video yang dikirim ke bot diupload ke R2, Gemini membuat judul + caption + hashtag, data disimpan di Supabase (`status = ready`), lalu bot mengirim laporan ke Telegram. Untuk mengaktifkan posting nanti: perbaiki credential Buffer, isi `bufferChannelId`, lalu publish workflow 2.
 
+## Caption (Gemini)
+
+Gemini tidak melihat video; teks dibuat dari `niche`, `offer` (layanan yang dipromosikan) dan `cta` (ajakan order) di node **Config**. Tiap video menonjolkan satu layanan acak (coaching 1-on-1, sesi latihan bareng, panduan setting, strategi, optimasi FPS PC). Prompt + filter melarang istilah cheat/hack/helper/assistant/aimbot/anti-ban, klaim bantuan otomatis saat bertanding, janji hasil instan, dan penyebutan AI/Gemini.
+
 ## Status (`tiktok_posts.status`)
 
 `ready` → `scheduled` (dikunci saat dikirim) → `posted` / `failed`.
