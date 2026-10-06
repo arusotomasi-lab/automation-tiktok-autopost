@@ -24,7 +24,7 @@ const config = node({
           { id: 'cfg-bucket', name: 'r2Bucket', value: 'tiktok-auto-post', type: 'string' },
           { id: 'cfg-public', name: 'r2PublicBaseUrl', value: 'https://pub-8bc2479eda66445b8647fffa32f2cdfc.r2.dev', type: 'string' },
           { id: 'cfg-owner', name: 'allowedChatIds', value: '2008311661', type: 'string' },
-          { id: 'cfg-delay', name: 'defaultDelayMinutes', value: 30, type: 'number' }
+          { id: 'cfg-delay', name: 'defaultDelayMinutes', value: 0, type: 'number' }
         ]
       }
     }
@@ -196,7 +196,7 @@ const replyOk = node({
   output: [{ ok: true }]
 });
 
-const guide = sticky('## Ingest TikTok\nKirim video (≤20MB, batas Bot API) ke bot Telegram. Opsional: tulis caption `@2026-10-07 19:00` untuk jadwal (WIB). Default: +30 menit.\n\nIsi node **Config**: domain publik R2 & chat ID Telegram Anda.', [config, buildMeta], { color: 4 });
+const guide = sticky('## Ingest TikTok\nKirim video (≤20MB, batas Bot API) ke bot Telegram. Opsional: tulis caption `@2026-10-07 19:00` untuk jadwal (WIB). Default: langsung diposting.\n\nIsi node **Config**: domain publik R2 & chat ID Telegram Anda.', [config, buildMeta], { color: 4 });
 
 export default workflow('tiktok-ingest', 'TikTok Autopost — 1. Ingest (Telegram → R2 + Gemini → Supabase)')
   .add(telegramIn)

@@ -4,8 +4,8 @@ const everyTenMin = trigger({
   type: 'n8n-nodes-base.scheduleTrigger',
   version: 1.4,
   config: {
-    name: 'Setiap 10 Menit',
-    parameters: { rule: { interval: [{ field: 'minutes', minutesInterval: 10 }] }, misfirePolicy: 'coalesce' }
+    name: 'Setiap 1 Menit',
+    parameters: { rule: { interval: [{ field: 'minutes', minutesInterval: 1 }] }, misfirePolicy: 'coalesce' }
   },
   output: [{}]
 });
@@ -96,14 +96,14 @@ const postBuffer = node({
       method: 'POST',
       url: 'https://api.buffer.com',
       authentication: 'genericCredentialType',
-      genericAuthType: 'httpTemplatedCustomAuth',
+      genericAuthType: 'httpHeaderAuth',
       sendBody: true,
       contentType: 'json',
       specifyBody: 'json',
       jsonBody: expr("{{ { query: 'mutation { createPost(input: { text: ' + JSON.stringify(($json.caption ?? '') + '\\n\\n' + ($json.hashtags ?? []).join(' ')) + ', channelId: ' + JSON.stringify($('Config').first().json.bufferChannelId) + ', schedulingType: automatic, mode: shareNow, assets: { videos: [{ url: ' + JSON.stringify($json.video_url) + ' }] } }) { __typename ... on PostActionSuccess { post { id status dueAt } } ... on MutationError { message } } }' } }}"),
       options: { timeout: 60000 }
     },
-    credentials: { httpTemplatedCustomAuth: newCredential('Buffer API') }
+    credentials: { httpHeaderAuth: newCredential('Buffer API') }
   },
   output: [{ data: { createPost: { __typename: 'PostActionSuccess', post: { id: '6703buf123', status: 'sending', dueAt: '2026-10-06T10:00:00Z' } } } }]
 });
@@ -211,7 +211,7 @@ const notifyFailed = node({
   output: [{ ok: true }]
 });
 
-const guide = sticky('## Publish TikTok\nTiap 10 menit ambil maks 3 baris `ready` yang sudah jatuh tempo, kunci (status `scheduled`), kirim ke Buffer GraphQL `createPost` (mode shareNow, video dari URL publik R2).\n\nIsi **Config**: channel ID TikTok di Buffer & chat ID Telegram.', [config, getDue], { color: 4 });
+const guide = sticky('## Publish TikTok\nTiap 1 menit ambil maks 3 baris `ready` yang sudah jatuh tempo, kunci (status `scheduled`), kirim ke Buffer GraphQL `createPost` (mode shareNow, video dari URL publik R2).\n\nIsi **Config**: channel ID TikTok di Buffer & chat ID Telegram.', [config, getDue], { color: 4 });
 
 export default workflow('tiktok-publish', 'TikTok Autopost — 2. Publish (Supabase → Buffer → Telegram)')
   .add(everyTenMin)

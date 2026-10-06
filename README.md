@@ -13,7 +13,7 @@ n8n 1. Ingest ──► Download file Telegram ──┬─► Upload ke R2 (vid
                   ──► Supabase tiktok_posts (status=ready, scheduled_at)
                   ──► Balas konfirmasi di Telegram
 
-n8n 2. Publish (tiap 10 menit)
+n8n 2. Publish (tiap 1 menit)
         ──► ambil maks 3 baris ready & jatuh tempo ──► kunci (status=scheduled, attempts+1)
         ──► Buffer GraphQL createPost (TikTok, shareNow, video URL publik R2)
               ├─ sukses → status=posted, buffer_post_id, posted_at → notif Telegram
@@ -41,7 +41,7 @@ Untuk retry: perbaiki penyebabnya, lalu set `status = 'ready'`.
    - `Cloudflare R2` (tipe S3) — endpoint `https://<ACCOUNT_ID>.r2.cloudflarestorage.com`, region `auto`, Access Key/Secret dari R2 API Token, aktifkan *Force path style*.
    - `Google Gemini API` — API key dari Google AI Studio.
    - `Supabase TikTok` — host `https://oykokptpfthfftlysels.supabase.co` + **service_role key** (RLS menolak anon).
-   - `Buffer API` (HTTP Templated Custom Auth) — header `{"headers":{"Authorization":"Bearer {{api_key}}"}}`.
+   - `Buffer API` (Header Auth) — Name `Authorization`, Value `Bearer <API key Buffer>`.
 2. **R2 akses publik**: aktifkan r2.dev subdomain atau custom domain di bucket `tiktok-auto-post` (Buffer mengambil video dari URL publik).
 3. **Node `Config`** di kedua workflow: isi `r2PublicBaseUrl`, `allowedChatIds` / `ownerChatId`, `bufferChannelId` (ID channel TikTok di Buffer; dapatkan lewat query GraphQL `channels`).
 4. Publish (aktifkan) kedua workflow di n8n.
