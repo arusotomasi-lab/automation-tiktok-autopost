@@ -53,7 +53,8 @@ Untuk retry: perbaiki penyebabnya, lalu set `status = 'ready'`.
 ## Catatan / batasan
 
 - Telegram Bot API hanya bisa mengunduh file ≤ 20 MB.
-- Bentuk field `assets: { videos: [{ url }] }` pada `createPost` Buffer belum terverifikasi terhadap skema resmi (docs Buffer tidak bisa diakses dari lingkungan build). Jika Buffer mengembalikan error skema, sesuaikan body di node **Kirim ke Buffer (TikTok)**; error akan tercatat di `last_error`.
+- Body `createPost` sudah diverifikasi lewat introspeksi GraphQL Buffer (6 Okt 2026): `assets: [{ video: { url } }]`, `needsApproval` wajib, judul TikTok di `metadata.tiktok.title`. Dry-run dengan channel palsu mengembalikan `NotFoundError` (format valid).
+- Channel TikTok di Buffer: `cheatpointblank90` (`6ac52d8e6a5c39ccb632b50f`), `cheatpointblank198` (`6ac52d5e6a5c39ccb632b2e7`), `citlahhh` (`6ac52d2e6a5c39ccb632b08b`).
 - Jika Gemini gagal / output bukan JSON, caption fallback ke caption Telegram (atau `Video baru 🎬`) + `#fyp`.
 
 ## Test

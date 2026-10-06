@@ -1,6 +1,6 @@
 const assert = require('assert');
 // Buffer body (same logic as jsonBody expression)
-function body($json, ch){ return { query: 'mutation { createPost(input: { text: ' + JSON.stringify(($json.caption ?? '') + '\n\n' + ($json.hashtags ?? []).join(' ')) + ', channelId: ' + JSON.stringify(ch) + ', schedulingType: automatic, mode: shareNow, assets: { videos: [{ url: ' + JSON.stringify($json.video_url) + ' }] } }) { __typename ... on PostActionSuccess { post { id status dueAt } } ... on MutationError { message } } }' }; }
+function body($json, ch){ return { query: 'mutation { createPost(input: { text: ' + JSON.stringify(($json.caption ?? '') + '\n\n' + ($json.hashtags ?? []).join(' ')) + ', channelId: ' + JSON.stringify(ch) + ', schedulingType: automatic, mode: shareNow, needsApproval: false, assets: [{ video: { url: ' + JSON.stringify($json.video_url) + ' } }], metadata: { tiktok: { title: ' + JSON.stringify(($json.title ?? '').slice(0, 90)) + ', isAiGenerated: false } } }) { __typename } }' }; }
 const b = body({caption:'Tips "hemat" \\ listrik 🍳', hashtags:['#fyp','#a'], video_url:'https://x/a.mp4'}, 'ch1');
 console.log(b.query);
 assert(b.query.includes('text: "Tips \\"hemat\\" \\\\ listrik 🍳\\n\\n#fyp #a"'));

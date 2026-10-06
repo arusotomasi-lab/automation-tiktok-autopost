@@ -100,7 +100,7 @@ const postBuffer = node({
       sendBody: true,
       contentType: 'json',
       specifyBody: 'json',
-      jsonBody: expr("{{ { query: 'mutation { createPost(input: { text: ' + JSON.stringify(($json.caption ?? '') + '\\n\\n' + ($json.hashtags ?? []).join(' ')) + ', channelId: ' + JSON.stringify($('Config').first().json.bufferChannelId) + ', schedulingType: automatic, mode: shareNow, assets: { videos: [{ url: ' + JSON.stringify($json.video_url) + ' }] } }) { __typename ... on PostActionSuccess { post { id status dueAt } } ... on MutationError { message } } }' } }}"),
+      jsonBody: expr("{{ { query: 'mutation { createPost(input: { text: ' + JSON.stringify(($json.caption ?? '') + '\\n\\n' + ($json.hashtags ?? []).join(' ')) + ', channelId: ' + JSON.stringify($('Config').first().json.bufferChannelId) + ', schedulingType: automatic, mode: shareNow, needsApproval: false, assets: [{ video: { url: ' + JSON.stringify($json.video_url) + ' } }], metadata: { tiktok: { title: ' + JSON.stringify(($json.title ?? '').slice(0, 90)) + ', isAiGenerated: false } } }) { __typename ... on PostActionSuccess { post { id status dueAt } } ... on InvalidInputError { message } ... on NotFoundError { message } ... on UnauthorizedError { message } ... on UnexpectedError { message } ... on RestProxyError { message } ... on LimitReachedError { message } } }' } }}"),
       options: { timeout: 60000 }
     },
     credentials: { httpHeaderAuth: newCredential('Buffer API') }
