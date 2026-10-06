@@ -24,7 +24,8 @@ const config = node({
           { id: 'cfg-bucket', name: 'r2Bucket', value: 'tiktok-auto-post', type: 'string' },
           { id: 'cfg-public', name: 'r2PublicBaseUrl', value: 'https://pub-8bc2479eda66445b8647fffa32f2cdfc.r2.dev', type: 'string' },
           { id: 'cfg-owner', name: 'allowedChatIds', value: '2008311661', type: 'string' },
-          { id: 'cfg-delay', name: 'defaultDelayMinutes', value: 0, type: 'number' }
+          { id: 'cfg-delay', name: 'defaultDelayMinutes', value: 0, type: 'number' },
+          { id: 'cfg-niche', name: 'niche', value: 'Gaming – Point Blank (tips, trik & gameplay)', type: 'string' }
         ]
       }
     }
@@ -173,27 +174,53 @@ const notifyR2Fail = node({
 });
 
 const geminiCaption = node({
-  type: '@n8n/n8n-nodes-langchain.googleGemini',
-  version: 1.2,
+  type: 'n8n-nodes-base.httpRequest',
+  version: 4.5,
   config: {
     name: 'Gemini Buat Caption',
-    onError: 'continueRegularOutput',
+    onError: 'continueErrorOutput',
     retryOnFail: true,
-    maxTries: 5,
-    waitBetweenTries: 5000,
+    maxTries: 2,
+    waitBetweenTries: 3000,
     parameters: {
-      resource: 'video',
-      operation: 'analyze',
-      modelId: { __rl: true, mode: 'id', value: 'models/gemini-flash-latest' },
-      inputType: 'binary',
-      binaryPropertyName: 'data',
-      text: expr("Kamu adalah copywriter TikTok Indonesia. Tonton video ini lalu buat: (1) judul singkat yang menarik (maks 60 karakter), (2) caption TikTok (maks 150 karakter, ada hook di awal, boleh 1-2 emoji), (3) 3-6 hashtag relevan termasuk #fyp. Catatan dari pemilik: \"{{ $('Siapkan Metadata').item.json.userCaption }}\". Balas HANYA JSON valid tanpa markdown dengan format: {\"title\": \"...\", \"caption\": \"...\", \"hashtags\": [\"#fyp\", \"...\"]}"),
-      simplify: true,
-      options: { maxOutputTokens: 600 }
+      method: 'POST',
+      url: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent',
+      authentication: 'predefinedCredentialType',
+      nodeCredentialType: 'googlePalmApi',
+      sendBody: true,
+      contentType: 'json',
+      specifyBody: 'json',
+      jsonBody: expr("{{ { contents: [{ parts: [ { text: 'Kamu adalah copywriter TikTok Indonesia untuk akun dengan niche: ' + $('Config').item.json.niche + '. Buat konten untuk 1 video baru di niche tersebut' + ($('Siapkan Metadata').item.json.userCaption ? ' (catatan dari pemilik: \"' + $('Siapkan Metadata').item.json.userCaption + '\")' : '') + '. Buat: (1) judul TikTok singkat dan menarik (maks 60 karakter), (2) caption TikTok (maks 150 karakter, ada hook di awal, boleh 1-2 emoji), (3) 4-6 hashtag relevan dengan niche termasuk #fyp. Variasikan agar tidak generik. Balas HANYA JSON valid dengan format: {\"title\": \"...\", \"caption\": \"...\", \"hashtags\": [\"#fyp\", \"...\"]}' } ] }], generationConfig: { responseMimeType: 'application/json', temperature: 1, maxOutputTokens: 2048 } } }}"),
+      options: { timeout: 60000 }
     },
     credentials: { googlePalmApi: newCredential('Google Gemini API') }
   },
-  output: [{ content: { parts: [{ text: '{"caption":"Masak 5 menit jadi! 🍳","hashtags":["#fyp","#resepmudah"]}' }], role: 'model' } }]
+  output: [{ candidates: [{ content: { parts: [{ text: '{"title":"Tips Headshot","caption":"Gini caranya 🔥","hashtags":["#fyp","#pointblank"]}' }] } }] }]
+});
+
+const geminiFallback = node({
+  type: 'n8n-nodes-base.httpRequest',
+  version: 4.5,
+  config: {
+    name: 'Gemini Cadangan',
+    onError: 'continueRegularOutput',
+    retryOnFail: true,
+    maxTries: 3,
+    waitBetweenTries: 5000,
+    parameters: {
+      method: 'POST',
+      url: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent',
+      authentication: 'predefinedCredentialType',
+      nodeCredentialType: 'googlePalmApi',
+      sendBody: true,
+      contentType: 'json',
+      specifyBody: 'json',
+      jsonBody: expr("{{ { contents: [{ parts: [ { text: 'Kamu adalah copywriter TikTok Indonesia untuk akun dengan niche: ' + $('Config').item.json.niche + '. Buat konten untuk 1 video baru di niche tersebut' + ($('Siapkan Metadata').item.json.userCaption ? ' (catatan dari pemilik: \"' + $('Siapkan Metadata').item.json.userCaption + '\")' : '') + '. Buat: (1) judul TikTok singkat dan menarik (maks 60 karakter), (2) caption TikTok (maks 150 karakter, ada hook di awal, boleh 1-2 emoji), (3) 4-6 hashtag relevan dengan niche termasuk #fyp. Variasikan agar tidak generik. Balas HANYA JSON valid dengan format: {\"title\": \"...\", \"caption\": \"...\", \"hashtags\": [\"#fyp\", \"...\"]}' } ] }], generationConfig: { responseMimeType: 'application/json', temperature: 1, maxOutputTokens: 2048 } } }}"),
+      options: { timeout: 60000 }
+    },
+    credentials: { googlePalmApi: newCredential('Google Gemini API') }
+  },
+  output: [{ candidates: [{ content: { parts: [{ text: '{"title":"Tips Headshot","caption":"Gini caranya 🔥","hashtags":["#fyp","#pointblank"]}' }] } }] }]
 });
 
 const joinResults = merge({
@@ -211,9 +238,9 @@ const prepareRow = node({
       includeOtherFields: false,
       assignments: {
         assignments: [
-          { id: 'p-raw', name: 'geminiText', value: expr("{{ $('Gemini Buat Caption').item.json.content?.parts?.[0]?.text ?? $('Gemini Buat Caption').item.json.text ?? '' }}"), type: 'string' },
-          { id: 'p-obj', name: 'ai', value: expr("{{ (() => { try { const t = ($('Gemini Buat Caption').item.json.content?.parts?.[0]?.text ?? $('Gemini Buat Caption').item.json.text ?? '').replace(/```json|```/g, '').trim(); const o = JSON.parse(t.slice(t.indexOf('{'), t.lastIndexOf('}') + 1)); return { title: String(o.title ?? '').slice(0, 100), caption: String(o.caption ?? ''), hashtags: Array.isArray(o.hashtags) ? o.hashtags.map(h => (String(h).startsWith('#') ? String(h) : '#' + h).replace(/\\s+/g, '')) : [] }; } catch (e) { const u = $('Siapkan Metadata').item.json.userCaption; return { title: (u || 'Video baru').slice(0, 60), caption: u || 'Video baru 🎬', hashtags: ['#fyp'] }; } })() }}"), type: 'object' },
-          { id: 'p-ok', name: 'geminiOk', value: expr("{{ !$('Gemini Buat Caption').item.json.error }}"), type: 'boolean' }
+          { id: 'p-raw', name: 'geminiText', value: expr("{{ $json.candidates?.[0]?.content?.parts?.filter(p => !p.thought).map(p => p.text ?? '').join('') ?? '' }}"), type: 'string' },
+          { id: 'p-obj', name: 'ai', value: expr("{{ (() => { try { const t = ($json.candidates?.[0]?.content?.parts?.filter(p => !p.thought).map(p => p.text ?? '').join('') ?? '').replace(/```json|```/g, '').trim(); const o = JSON.parse(t.slice(t.indexOf('{'), t.lastIndexOf('}') + 1)); return { title: String(o.title ?? '').slice(0, 100), caption: String(o.caption ?? ''), hashtags: Array.isArray(o.hashtags) ? o.hashtags.map(h => (String(h).startsWith('#') ? String(h) : '#' + h).replace(/\\s+/g, '')) : [] }; } catch (e) { const u = $('Siapkan Metadata').item.json.userCaption; return { title: (u || 'Video baru').slice(0, 60), caption: u || 'Video baru 🎬', hashtags: ['#fyp'] }; } })() }}"), type: 'object' },
+          { id: 'p-ok', name: 'geminiOk', value: expr('{{ !!$json.candidates?.[0]?.content }}'), type: 'boolean' }
         ]
       }
     }
@@ -283,6 +310,8 @@ export default workflow('tiktok-ingest', 'TikTok Autopost — 1. Ingest (Telegra
   .onError(notifyR2Fail)
   .add(downloadVideo)
   .to(geminiCaption.to(joinResults.input(1)))
+  .add(geminiCaption)
+  .onError(geminiFallback.to(joinResults.input(1)))
   .add(joinResults)
   .to(prepareRow)
   .to(saveRow)

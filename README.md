@@ -9,7 +9,7 @@ Otomasi posting video TikTok: **Telegram → Cloudflare R2 + Gemini → Supabase
         │  (opsional caption: "catatan @2026-10-07 19:00" → jadwal WIB)
         ▼
 n8n 1. Ingest ──► Download file Telegram ──┬─► Upload ke R2 (videos/yyyy/MM/dd/<id>.mp4)
-                                           └─► Gemini (video analyze) → caption + hashtag JSON
+                                           └─► Gemini (teks, berdasarkan niche di Config) → judul + caption + hashtag JSON
                   ──► Supabase tiktok_posts (status=ready, scheduled_at)
                   ──► Kirim laporan ke Telegram (judul, caption, hashtag, link video)
 
@@ -26,7 +26,7 @@ n8n 2. Publish (tiap 1 menit)
 | Cloudflare R2 | bucket `tiktok-auto-post` (APAC) |
 | Supabase | project `oykokptpfthfftlysels` — tabel `tiktok_posts`, `automation_logs` |
 | n8n | `TikTok Autopost — 1. Ingest` (`qbvS8aQsVwvHzURm`), `TikTok Autopost — 2. Publish` (`JYX8Kd4ZX2JuLSkH`) |
-| Gemini | node Google Gemini, model `models/gemini-flash-latest` |
+| Gemini | HTTP `generateContent`: utama `gemini-3.5-flash-lite`, cadangan `gemini-3.1-flash-lite` (teks saja, berdasarkan `niche`) |
 | Buffer | `https://api.buffer.com` (GraphQL) |
 
 ## Mode saat ini: laporan saja
@@ -63,3 +63,10 @@ Untuk retry: perbaiki penyebabnya, lalu set `status = 'ready'`.
 node tests/expressions.test.js
 ```
 Menguji logika ekspresi n8n: escape body GraphQL Buffer, parser JSON Gemini + fallback, literal array Postgres, regex jadwal.
+
+## Catatan model Gemini (uji 7 Okt 2026, API key ini)
+
+- `gemini-2.5-flash` / `2.5-flash-lite`: 404, tidak tersedia untuk pengguna baru.
+- `gemini-3.5`–`3.8-flash`, `gemini-flash-latest`: 503 (high demand) saat diuji.
+- `gemini-pro-latest`: 429 (kuota API habis; langganan Gemini Pro di aplikasi tidak berlaku untuk API).
+- `gemini-3.5-flash-lite`, `gemini-3.1-flash-lite`, `gemini-flash-lite-latest`: OK.
