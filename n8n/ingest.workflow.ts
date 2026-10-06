@@ -22,7 +22,7 @@ const config = node({
       assignments: {
         assignments: [
           { id: 'cfg-bucket', name: 'r2Bucket', value: 'tiktok-auto-post', type: 'string' },
-          { id: 'cfg-public', name: 'r2PublicBaseUrl', value: 'https://REPLACE_WITH_R2_PUBLIC_DOMAIN', type: 'string' },
+          { id: 'cfg-public', name: 'r2PublicBaseUrl', value: 'https://pub-8bc2479eda66445b8647fffa32f2cdfc.r2.dev', type: 'string' },
           { id: 'cfg-owner', name: 'allowedChatIds', value: '2008311661', type: 'string' },
           { id: 'cfg-delay', name: 'defaultDelayMinutes', value: 30, type: 'number' }
         ]
