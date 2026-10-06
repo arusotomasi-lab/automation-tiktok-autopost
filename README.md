@@ -64,6 +64,11 @@ node tests/expressions.test.js
 ```
 Menguji logika ekspresi n8n: escape body GraphQL Buffer, parser JSON Gemini + fallback, literal array Postgres, regex jadwal.
 
+```bash
+node tests/safety-filter.test.js
+```
+Menguji filter keamanan caption: kata berisiko (cheat/hack/aimbot/…) diganti, hashtag terlarang/tidak relevan (#…gemini, #cheat…) dibuang, `#fyp` selalu ada, maks 6 hashtag.
+
 ## Catatan model Gemini (uji 7 Okt 2026, API key ini)
 
 - `gemini-2.5-flash` / `2.5-flash-lite`: 404, tidak tersedia untuk pengguna baru.
