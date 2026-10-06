@@ -1,10 +1,10 @@
 const assert = require('assert');
 // Same logic as the n8n "Parse Caption Gemini" expression
 function parseSafe(text, userCaption) {
-  const BAD = /(cheat|citer|cheater|hack|aimbot|aim ?bot|wallhack|wall ?hack|inject|mod ?apk|script|bug ?abuse|jual ?akun|giveaway|gratis|free ?(cash|diamond)|link ?di ?bio|gemini|chatgpt|openai|\bai\b|\bbot\b)/i;
+  const BAD = /(cheat|citer|cheater|hack|helper|aimbot|aim ?bot|wallhack|wall ?hack|inject|mod ?apk|script|bug ?abuse|jual ?akun|giveaway|gratis|free ?(cash|diamond)|link ?di ?bio|gemini|chatgpt|openai|\bai\b|\bbot\b)/i;
   const clean = s => String(s ?? '')
     .replace(/auto ?headshot/gi, 'headshot')
-    .replace(/(cheat|citer|cheater|hack|aimbot|aim ?bot|wallhack|wall ?hack|inject|script)/gi, 'trik')
+    .replace(/(cheat|citer|cheater|hack|helper|aimbot|aim ?bot|wallhack|wall ?hack|inject|script)/gi, 'trik')
     .replace(/\b(gemini|chatgpt|openai)\b/gi, '')
     .replace(/\s{2,}/g, ' ').trim();
   try {
@@ -24,4 +24,5 @@ console.log(r);
 assert.strictEqual(r.title, 'Tips trik SG Point Blank headshot!');
 assert.ok(!/cheat|gemini|aimbot/i.test(JSON.stringify(r)));
 assert.deepStrictEqual(r.hashtags, ['#fyp', '#pointblank', '#pbindonesia']);
+assert.ok(!/helper/i.test(JSON.stringify(parseSafe('{"title":"PB helper mantap","caption":"pakai helper","hashtags":["#pbhelper","#pointblank"]}'))));
 console.log('SAFE OK');
