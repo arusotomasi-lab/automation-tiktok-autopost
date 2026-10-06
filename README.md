@@ -98,3 +98,13 @@ Ubah jadwal/akun: edit tabel `posting_slots` di Supabase (kolom `slot_time`, `bu
 - 1 video = 1 akun = 1 kali posting; video yang sudah diambil tidak pernah kembali ke gudang. Retry (maks 3x) memakai video & akun yang sama.
 - Gudang kosong saat slot → 1x notifikasi Telegram, slot dilewati.
 - Setelah sukses: tunggu 30 menit (Buffer mengunduh video) → salin ke `posted/` di R2 → hapus dari `videos/`.
+
+## Video besar (100–200 MB, maks 2 GB) — Telegram Bot API sendiri
+
+Service Railway `telegram-bot-api` (project `giving-success`, folder `telegram-bot-api/`) menjalankan Bot API mode `--local` + nginx. Langkah sekali saja:
+1. Railway → service `telegram-bot-api` → Variables: isi `TELEGRAM_API_ID` & `TELEGRAM_API_HASH` (dari https://my.telegram.org → API development tools).
+2. Buka di browser: `https://api.telegram.org/bot<TOKEN_BOT>/logOut` (pindahkan bot dari server cloud Telegram).
+3. n8n → Credentials → **Telegram account** → Base URL = `http://telegram-bot-api.railway.internal:8080` → Save.
+4. Publish ulang workflow **1. Ingest** (supaya webhook bot didaftarkan ke server baru) dan **2. Publish**.
+
+n8n: `N8N_DEFAULT_BINARY_DATA_MODE=filesystem`, `GENERIC_TIMEZONE=Asia/Jakarta` (video besar tidak disimpan di RAM).
