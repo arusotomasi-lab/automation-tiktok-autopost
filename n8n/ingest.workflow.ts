@@ -90,6 +90,7 @@ const uploadR2 = node({
   version: 1,
   config: {
     name: 'Upload ke R2',
+    onError: 'continueErrorOutput',
     parameters: {
       resource: 'file',
       operation: 'upload',
@@ -101,6 +102,23 @@ const uploadR2 = node({
     credentials: { s3: newCredential('Cloudflare R2') }
   },
   output: [{ success: true }]
+});
+
+const notifyR2Fail = node({
+  type: 'n8n-nodes-base.telegram',
+  version: 1.2,
+  config: {
+    name: 'Notif Gagal Upload R2',
+    parameters: {
+      resource: 'message',
+      operation: 'sendMessage',
+      chatId: expr("{{ $('Siapkan Metadata').item.json.chatId }}"),
+      text: expr("❌ <b>Upload ke Cloudflare R2 gagal</b>\n\nFile: {{ $('Siapkan Metadata').item.json.r2Key }}\nError: {{ ($json.error?.message ?? $json.error ?? 'unknown').toString().replace(/</g,'&lt;').slice(0, 300) }}\n\nData belum disimpan. Periksa credential R2 (S3 account) lalu kirim ulang video."),
+      additionalFields: { appendAttribution: false, parse_mode: 'HTML' }
+    },
+    credentials: { telegramApi: newCredential('Telegram Bot') }
+  },
+  output: [{ ok: true }]
 });
 
 const geminiCaption = node({
@@ -207,6 +225,8 @@ export default workflow('tiktok-ingest', 'TikTok Autopost — 1. Ingest (Telegra
   .to(downloadVideo)
   .add(downloadVideo)
   .to(uploadR2.to(joinResults.input(0)))
+  .add(uploadR2)
+  .onError(notifyR2Fail)
   .add(downloadVideo)
   .to(geminiCaption.to(joinResults.input(1)))
   .add(joinResults)
@@ -214,5 +234,4 @@ export default workflow('tiktok-ingest', 'TikTok Autopost — 1. Ingest (Telegra
   .to(saveRow)
   .to(replyOk)
   .add(guide)
-  .group('Penyimpanan & AI', [downloadVideo, uploadR2, geminiCaption, joinResults], { description: 'Download video dari Telegram, upload ke R2, dan Gemini membuat caption + hashtag secara paralel' })
   .group('Simpan & Konfirmasi', [prepareRow, saveRow, replyOk], { description: 'Parse JSON Gemini (fallback ke caption user), insert ke tiktok_posts status ready, balas ke Telegram' });
