@@ -90,3 +90,11 @@ Menguji filter keamanan caption: kata berisiko (cheat/hack/aimbot/…) diganti, 
 Ubah jadwal/akun: edit tabel `posting_slots` di Supabase (kolom `slot_time`, `buffer_channel_id`, `account_name`, `active`).
 
 > Catatan: file `n8n/*.workflow.ts` di repo adalah referensi; sumber kebenaran adalah workflow di n8n (node `Simpan ke Supabase` kini memanggil RPC `enqueue_post`, Publish punya node `Antrekan Ulang yang Gagal`).
+
+## Gudang & jadwal acak (versi terbaru)
+
+- Telegram → video langsung masuk **gudang** (`tiktok_posts.status = 'pending'`) lewat RPC `add_to_pool`.
+- Slot 08:00 (@cheatpointblank90), 12:00 (@cheatpointblank198), 18:00 (@citlahhh) WIB: RPC `claim_slot_posts()` (dipanggil tiap menit) mengambil **1 video acak** dari gudang per slot (jendela 30 menit), mengunci ke akun slot, lalu Publish mengirim ke Buffer.
+- 1 video = 1 akun = 1 kali posting; video yang sudah diambil tidak pernah kembali ke gudang. Retry (maks 3x) memakai video & akun yang sama.
+- Gudang kosong saat slot → 1x notifikasi Telegram, slot dilewati.
+- Setelah sukses: tunggu 30 menit (Buffer mengunduh video) → salin ke `posted/` di R2 → hapus dari `videos/`.
