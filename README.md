@@ -79,3 +79,14 @@ Menguji filter keamanan caption: kata berisiko (cheat/hack/aimbot/…) diganti, 
 - `gemini-3.5`–`3.8-flash`, `gemini-flash-latest`: 503 (high demand) saat diuji.
 - `gemini-pro-latest`: 429 (kuota API habis; langganan Gemini Pro di aplikasi tidak berlaku untuk API).
 - `gemini-3.5-flash-lite`, `gemini-3.1-flash-lite`, `gemini-flash-lite-latest`: OK.
+
+## Alur produksi (07 Okt 2026)
+
+1. Kirim video (≤ 20 MB, sebagai *Video*) ke bot Telegram.
+2. **Ingest** → upload R2 → Gemini (judul/caption/hashtag) → RPC `enqueue_post` memilih slot kosong berikutnya dari tabel `posting_slots` (jam WIB + akun TikTok) → laporan "VIDEO MASUK ANTREAN" (akun + jam).
+3. **Publish** (tiap menit) → `requeue_failed()` (retry otomatis maks 3x, jeda 10 menit) → ambil post jatuh tempo → Buffer `createPost` ke channel akun slot tsb → laporan "VIDEO SUDAH DIPOSTING KE TIKTOK" (nama akun, judul, caption, hashtag) atau laporan gagal + info retry.
+4. **Error Alert** (`laDi26b1feomGj9o`) → pesan Telegram bila workflow crash (perlu dipasang sebagai *Error Workflow* di setting Ingest & Publish).
+
+Ubah jadwal/akun: edit tabel `posting_slots` di Supabase (kolom `slot_time`, `buffer_channel_id`, `account_name`, `active`).
+
+> Catatan: file `n8n/*.workflow.ts` di repo adalah referensi; sumber kebenaran adalah workflow di n8n (node `Simpan ke Supabase` kini memanggil RPC `enqueue_post`, Publish punya node `Antrekan Ulang yang Gagal`).
