@@ -1,12 +1,18 @@
 #!/bin/sh
 set -e
-# Downloaded videos live in the work dir (Railway volume, small). n8n copies each video to R2
-# within a few minutes, so delete downloaded files older than 20 minutes every 5 minutes.
+# Downloaded videos live in the work dir (Railway volume, small). n8n fetches each file right after
+# getFile (seconds), so they are safe to delete quickly. A full volume crashes the server
+# ("Can't create directories"), so purge all media on boot and anything older than 3 min every minute.
+WORK=/var/lib/telegram-bot-api
+purge() {
+  find "$WORK" -type f \( -path '*/videos/*' -o -path '*/documents/*' -o -path '*/temp/*' -o -path '*/animations/*' -o -path '*/video_notes/*' \) "$@" -delete 2>/dev/null || true
+  find /tmp/telegram-bot-api -type f "$@" -delete 2>/dev/null || true
+}
+purge
 (
   while true; do
-    find /var/lib/telegram-bot-api -type f -mmin +20 \( -path '*/videos/*' -o -path '*/documents/*' -o -path '*/temp/*' \) -delete 2>/dev/null || true
-    find /tmp/telegram-bot-api -type f -mmin +20 -delete 2>/dev/null || true
-    sleep 300
+    sleep 60
+    purge -mmin +3
   done
 ) &
 nginx
