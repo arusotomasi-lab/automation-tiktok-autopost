@@ -1,0 +1,10 @@
+node_modules/
+.tools/
+.venv/
+output/*
+!output/.gitkeep
+cache/**/*
+!cache/**/.gitkeep
+public/audio/*.wav
+.env
+*.log
