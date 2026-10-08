@@ -21,6 +21,7 @@
     "remotion": "4.0.534"
   },
   "devDependencies": {
+    "@remotion/install-whisper-cpp": "^4.0.534",
     "@types/react": "19.2.2",
     "ffmpeg-static": "^5.2.0",
     "typescript": "5.9.3"

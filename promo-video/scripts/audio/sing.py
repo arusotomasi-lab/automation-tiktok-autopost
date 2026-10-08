@@ -116,12 +116,12 @@ def sing_line(line, idx, transpose=0, detune_cents=0.0, harmony=False):
     since = np.zeros(Tn)
     for i in range(1, Tn):
         since[i] = since[i - 1] + FP if seg_t[i] == seg_t[i - 1] else 0
-    depth = np.clip((since - 160) / 200, 0, 1) * 0.022  # ~ +-38 cents at full depth
+    depth = np.clip((since - 160) / 200, 0, 1) * 0.013  # ~ +-22 cents at full depth
     vib = depth * np.sin(2 * np.pi * 5.6 * np.arange(Tn) * FP / 1000 + idx)
     # keep a little of the natural contour so it does not sound fully robotic
     nat = np.where(f0[near] > 0, np.log(np.maximum(f0[near], 1)), np.nan)
     med = np.nanmedian(nat) if np.any(~np.isnan(nat)) else 0
-    detail = np.nan_to_num(nat - med) * 0.12
+    detail = np.nan_to_num(nat - med) * 0.08
     detail = signal.lfilter([0.2], [1, -0.8], detail)
     f0_t = np.exp(sm + vib + detail) * 2 ** (detune_cents / 1200)
     f0_t = np.where(voiced_t, f0_t, 0.0)
