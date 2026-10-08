@@ -11,7 +11,7 @@ const body = f => fs.readFileSync(path.join(dir, f), 'utf8');
 const plain = x => JSON.parse(JSON.stringify(x));
 // Lib functions in a plain sandbox.
 const L = vm.createContext({});
-vm.runInContext(lib + '\n;globalThis.__L = { libHash, opening, pickFresh, ANGLES, validateCandidate, violations, finalizeTags, normTag, jaccard, parseModelResponse, manualFallback, MANUAL_POOL, HASHTAG_POOL, cleanLegacy, SYSTEM_PROMPT, buildUserPrompt };', L);
+vm.runInContext(lib + '\n;globalThis.__L = { ANGLE_RULES, HOOKS, libHash, opening, pickFresh, ANGLES, validateCandidate, violations, finalizeTags, normTag, jaccard, parseModelResponse, manualFallback, MANUAL_POOL, HASHTAG_POOL, cleanLegacy, SYSTEM_PROMPT, buildUserPrompt };', L);
 const {
   validateCandidate, violations, finalizeTags, normTag, jaccard, parseModelResponse, manualFallback, MANUAL_POOL, cleanLegacy
 } = L.__L;
@@ -78,6 +78,8 @@ const ROW = {
   hashtags: ['#fyp', '#pointblank'], gemini_raw: { ok: true, text: '{}', file_name: 'x.mp4' }
 };
 const prep = runNode('prepare-prompt.js', { recentRaw: JSON.stringify(RECENT) }, { 'Kunci Antrean': ROW });
+const prepAngle = prep.angle;
+prep.angle = 'kontrol recoil saat spray'; // fixed so the recoil sample captions below match the angle rule
 assert.strictEqual(prep.slot, '07:00');
 assert.strictEqual(prep.groqBody1.model, 'qwen/qwen3.8-27b');
 assert.strictEqual(prep.groqBody1.reasoning_effort, 'none');
@@ -156,6 +158,30 @@ assert.ok(/sensitivitas", bukan "sensitivity/.test(prepAvoid.groqBody1.messages[
 // caption-final records the hook for the next run's avoidance
 fin = runNode('caption-final.js', chk, { ...base, 'Cek Groq Utama': chk });
 assert.strictEqual(fin.patch.gemini_raw.publish_caption.hook, prep.hook);
+assert.ok(L.__L.ANGLE_RULES[prepAngle], 'angle acak punya aturan');
+
+// owner rules (9 Okt): no first person, no before/after or result claims, typos, angle must match
+const base2 = { title: 'Spray Rapi Itu Latihan', hashtags: ['#pointblank'] };
+for (const bad of [
+  'Aku sering pegel pas main lama, coba atur kontrol biar lebih nyaman dan presisi tiap ronde 🎮',
+  'Tanganku pegel parah pas push, atur kontrol biar posisi tangan lebih nyaman tiap ronde 🎮',
+  'Dulu sering kalah duel, sekarang udah mantap karena setting yang pas buat tiap ronde 🎯',
+  'Spray makin rapi berkat setting yang pas, coba atur pelan-pelan biar makin stabil 🎯',
+  'Atur recoil kamu sekarang dan langsung jago di tiap ronde ranked yang kamu mainin 🎯',
+  'Senjata pilihanmu udah kepas sama gaya main kamu? Coba cek lagi biar makin enak dipakai 🎯',
+  'Gasss terus pas spray, atur tarikan recoil biar tembakan makin rapi dan konsisten 🎯',
+  'Biar matchRanked makin enak, atur tarikan recoil dan spray biar tembakan makin rapi 🎯',
+  'Seruduk tanpa ilmu? Cakap aja. Atur tarikan recoil biar spray kamu makin rapi tiap ronde 🎯'
+]) assert.ok(!validateCandidate({ ...base2, caption: bad }, []).ok, 'harus ditolak: ' + bad);
+assert.ok(validateCandidate({ ...base2, caption: 'Ping suka naik pas war? Cek koneksi internet dan turunin setting grafis biar main tetap lancar 🎮' }, [], 'koneksi dan ping yang stabil').ok);
+assert.match(validateCandidate({ ...base2, caption: 'Kalo lag bikin frustasi, coba cek setting mouse dan sensitivitas biar tiap tembakan makin mantap 🎮' }, [], 'koneksi dan ping yang stabil').reason, /keluar topik/);
+assert.match(validateCandidate({ ...base2, title: 'Main Makin Enak Tiap Hari', caption: 'Main PB makin enak kalau setting kamu udah pas dan nyaman dipakai tiap hari 🎮' }, [], 'kontrol recoil saat spray').reason, /tidak nyambung/);
+assert.ok(!L.__L.HOOKS.some(h => /aku|dulu vs sekarang/i.test(h)), 'hook orang pertama / dulu-sekarang dihapus');
+const prepRule = runNode('prepare-prompt.js', { recentRaw: '[]' }, { 'Kunci Antrean': ROW });
+assert.ok(prepRule.groqBody1.messages[1].content.includes('(fokus: '), 'fokus sudut pandang ada di prompt');
+assert.ok(/DILARANG sudut pandang orang pertama/.test(prepRule.groqBody1.messages[0].content));
+assert.strictEqual(prepRule.groqBody1.temperature, 0.7);
+assert.ok(validateCandidate({ ...base2, caption: 'Main PvP bareng tim? Atur tarikan recoil dan spray biar tembakan makin rapi tiap ronde 🎯' }, []).ok, 'PvP bukan camelCase');
 
 console.log('CAPTION PUBLISH OK');
 console.log('lib_hash', L.__L.libHash());

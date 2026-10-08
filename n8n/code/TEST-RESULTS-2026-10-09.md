@@ -64,3 +64,34 @@ Node yang di-disable meneruskan input apa adanya. Akibatnya "Cek Groq Utama/Cada
 Pada uji ini Gemini 3.1-flash-lite **timeout di 12 detik**. Caption tetap terbentuk dari cadangan manual dalam ±12 detik. Karena itu timeout Gemini dinaikkan ke **15 detik**.
 
 Total waktu terburuk sekarang ±5 + 12 + 12 + 15 ≈ 44 detik. Rollback "pakai Gemini saja" tetap aman, tapi Gemini sendiri kadang lambat atau 503, jadi cadangan Ingest dan manual tetap diperlukan.
+
+## v5 (aturan owner 9 Okt ±02:00 WIB), `lib_hash` `fedcccd5`: kode yang dipasang ke draft Publish
+
+Perubahan dari v3:
+- Larangan baru: sudut pandang orang pertama (aku/gue/saya/-ku), pola dulu…sekarang, "berkat", "langsung jago", "dijamin", huruf berulang tiga kali, "kepas", kata camelCase ("matchRanked"), dan kata Melayu (cakap/sahaja/awak).
+- Tiap sudut pandang punya fokus di prompt, ditambah daftar kata wajib dan kata terlarang yang dicek pada hasil. Contoh: topik ping/lag ditolak kalau membahas mouse atau aim.
+- Hook orang pertama dan hook "dulu vs sekarang" dihapus.
+- Temperature Groq 0,7 dan Gemini 0,8 (sebelumnya 0,95/1,0 menghasilkan frasa janggal seperti "Cakap aja").
+
+Uji v4 (2 run) menemukan "matchRanked" dan "Seruduk tanpa ilmu? Cakap aja.". Keduanya ditambahkan ke larangan di v5.
+
+6 run berantai, qwen utama, tanpa simulasi gagal (semua `groq_utama` qwen/qwen3.8-27b, `lib_hash` `fedcccd5`):
+
+| # | Akun | Judul | Caption | Hashtag | Sudut pandang | Waktu |
+|---|---|---|---|---|---|---|
+| 1 | @cheatpointblank90 | Cek kebiasaan kecil ini dulu | Sering lupa kasih callout ke tim? Komunikasi yang jelas bikin strategi PB kamu makin rapi dan performa naik drastis. 🎙️👾 | #fyp #pointblank #pbindonesia #gamingindonesia #pbzepetto | komunikasi tim | 0,66 s |
+| 2 | @citlahhh | Ranked PB bikin emosi? | Tenang dulu sebelum gas lagi. Jaga mood biar main tetap fokus, setting dan strategi pun lebih enak dipakai. Mental stabil, performa naik. 🧘‍♂️🎮 | #fyp #pointblank #pbindonesia #gamingindonesia #gamerindonesia | mental ranked | 0,50 s |
+| 3 | @cheatpointblank198 | FPS PB lo drop? Cek ini dulu | Tantangan: bisa jaga FPS stabil tanpa lag? Atur setting grafis biar frame rate konsisten. Gameplay jadi mulus, senyaman mungkin! 🎮⚡ | #fyp #pointblank #pbzepetto #settingpb #gamerindonesia | grafis/FPS | 0,54 s |
+| 4 | @cheatpointblank90 | Bom meledak pas lagi di depan? | Kasihan ya kalau tiap pasang bom selalu kena counter. Coba atur strategi gerak dan timing lo biar lebih aman. Gameplay jadi lebih rapi dan peluang menang makin besar! 💣🛡️ | #fyp #pointblank #pbindonesia #gamerindonesia | bom | 0,98 s |
+| 5 | @citlahhh | Aim lo masih kerasa ngaco? | Eh, aim lo masih kerasa ngaco? Cek lagi sensitivitas dan crosshair biar bidikan lebih presisi. Setting pas bikin main makin smooth! 🎯✨ | #fyp #pointblank #pbindonesia #settingpb #fpsgame | sensitivitas/crosshair | 0,99 s |
+| 6 | @cheatpointblank198 | Warming Up Sebelum Gas Ranked? | Santai dulu sebelum masuk ranked. Pemanasan ringan bikin aim lo lebih stabil dan strategi lebih siap. Mulai dari setting yang pas, gameplay jadi lebih lancar! 🏃‍♂️🎯 | #fyp #pointblank #pbindonesia #gamingindonesia #settingpb | pemanasan | 0,89 s |
+
+Semua unik, tanpa orang pertama dan tanpa pola dulu/sekarang, nyambung dengan sudut pandangnya, judul ≤ 60, caption ≤ 180, hashtag 4–5 dengan `#fyp` di depan.
+
+Catatan untuk owner:
+- Run 1 ("performa naik drastis") dan run 4 ("peluang menang makin besar") masih berupa klaim hasil yang ringan. Keduanya bisa ditambahkan ke larangan bila diinginkan.
+- Judul run 4 agak janggal.
+
+Uji PATCH "Simpan Caption Final" (format sama, ke id yang tidak ada): sukses, tanpa error tipe `text[]`/`jsonb`, alur tetap lanjut (`alwaysOutputData`).
+
+Draft Publish `806e351a`: keempat Code node diverifikasi **identik byte demi byte** dengan `n8n/code/dist/caption-nodes.json`.

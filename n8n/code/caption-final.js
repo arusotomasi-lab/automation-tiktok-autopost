@@ -28,7 +28,7 @@ try {
       try {
         if (!g) throw new Error('tidak dijalankan');
         const r = parseModelResponse(g);
-        const v = validateCandidate(r.obj, recent);
+        const v = validateCandidate(r.obj, recent, p.angle);
         trail.push({ step: 'gemini', ok: v.ok, model: r.model, reason: v.reason || '' });
         if (v.ok) out = { ...v.cand, source: 'gemini', model: r.model };
       } catch (e) { trail.push({ step: 'gemini', ok: false, reason: String(e && e.message || e).slice(0, 160) }); }

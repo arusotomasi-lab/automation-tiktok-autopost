@@ -3,7 +3,7 @@
 const p = $('Siapkan Prompt Caption').item.json;
 try {
   const r = parseModelResponse($json);
-  const v = validateCandidate(r.obj, p.recent);
+  const v = validateCandidate(r.obj, p.recent, p.angle);
   return { json: { ok: v.ok, cand: v.cand || null, reason: v.reason || '', model: r.model, lib_hash: libHash() } };
 } catch (e) {
   return { json: { ok: false, cand: null, reason: String(e && e.message || e).slice(0, 200), model: $json.model || '' } };

@@ -16,11 +16,31 @@ const ANGLES = [
   'atur kontrol biar tangan nyaman'
 ];
 
+// What each angle must talk about (focus goes into the prompt; must/avoid are checked on the result).
+const ANGLE_RULES = {
+  'sensitivitas dan crosshair yang pas': { focus: 'sensitivitas, crosshair, dan bidikan', must: /sensitiv|sensi\b|crosshair|bidik|\baim\b/i, avoid: /\bping\b|\blag\b|koneksi/i },
+  'setting grafis biar FPS stabil': { focus: 'setting grafis dan FPS yang stabil; jangan bahas mouse atau sensitivitas', must: /grafis|\bfps\b|patah|frame|resolusi/i, avoid: /mouse|sensitiv|crosshair|recoil/i },
+  'kontrol recoil saat spray': { focus: 'kontrol recoil dan spray', must: /recoil|spray|tarikan/i, avoid: /\bping\b|koneksi/i },
+  'rotasi dan cara baca map': { focus: 'rotasi dan cara membaca map', must: /rotasi|\bmap\b|jalur|peta/i, avoid: /mouse|sensitiv|crosshair/i },
+  'pilih posisi dan cover yang aman': { focus: 'memilih posisi dan cover yang aman', must: /posisi|cover|sudut|tempat/i, avoid: /mouse|\bping\b/i },
+  'komunikasi dan callout bareng tim': { focus: 'komunikasi dan callout bareng tim', must: /\btim\b|callout|komunikasi|kompak|teman/i, avoid: /mouse|sensitiv|\bping\b/i },
+  'jaga mental saat main ranked': { focus: 'menjaga mental dan emosi saat ranked', must: /mental|emosi|tenang|sabar|tilt|panik|fokus/i, avoid: /mouse|\bping\b|grafis/i },
+  'pemanasan sebelum masuk ranked': { focus: 'pemanasan sebelum ranked', must: /pemanasan|warm|latihan|siap/i, avoid: /\bping\b|grafis/i },
+  'pilihan senjata andalan': { focus: 'memilih senjata andalan yang cocok dengan gaya main', must: /senjata|loadout|andalan/i, avoid: /\bping\b|koneksi/i },
+  'refleks saat duel satu lawan satu': { focus: 'refleks dan reaksi saat duel satu lawan satu', must: /duel|refleks|reaksi|1v1|satu lawan satu/i, avoid: /\bping\b|koneksi/i },
+  'strategi pasang dan jinakkan bom': { focus: 'strategi memasang dan menjinakkan bom', must: /\bbom\b|jinak|pasang|defuse|\bplant/i, avoid: /mouse|sensitiv/i },
+  'evaluasi kesalahan sendiri tiap ronde': { focus: 'mengevaluasi kesalahan sendiri tiap ronde', must: /evaluasi|kesalahan|salah|belajar/i, avoid: /\bping\b/i },
+  'koneksi dan ping yang stabil': { focus: 'koneksi internet, ping, dan setting grafis yang ringan; JANGAN bahas mouse, sensitivitas, aim, atau recoil', must: /\bping\b|koneksi|\blag\b|internet|jaringan|wifi|sinyal/i, avoid: /mouse|sensitiv|crosshair|\baim\b|recoil/i },
+  'kebiasaan kecil yang bikin sering kalah': { focus: 'kebiasaan kecil saat main yang bikin sering kalah', must: /kebiasaan|sering|kecil|sepele/i, avoid: null },
+  'konsisten latihan sedikit tiap hari': { focus: 'latihan rutin sedikit demi sedikit', must: /latihan|konsisten|rutin|tiap hari/i, avoid: /\bping\b/i },
+  'atur kontrol biar tangan nyaman': { focus: 'mengatur kontrol, tombol, dan posisi tangan supaya nyaman', must: /kontrol|tangan|nyaman|tombol|keybind|grip/i, avoid: /\bping\b|koneksi/i }
+};
+
 const HOOKS = [
-  'buka dengan pertanyaan yang relatable', 'buka dengan curhat singkat ala pemain (pakai "aku")',
-  'buka dengan fakta singkat yang bikin penasaran', 'buka dengan situasi kesel yang sering dialami pemain',
-  'buka dengan kalimat ekspresif yang heboh tapi sopan', 'buka dengan tantangan ringan ke penonton',
-  'buka dengan perbandingan dulu vs sekarang tanpa janji hasil instan', 'buka dengan pengingat santai ala teman mabar'
+  'buka dengan pertanyaan yang relatable', 'buka dengan fakta singkat yang bikin penasaran',
+  'buka dengan situasi kesel yang sering dialami pemain', 'buka dengan kalimat ekspresif yang heboh tapi sopan',
+  'buka dengan tantangan ringan ke penonton', 'buka dengan pengingat santai ala teman mabar',
+  'buka dengan ajakan cek satu kebiasaan kecil', 'buka dengan kalimat santai yang langsung ke inti masalah'
 ];
 
 const MANUAL_POOL = [
@@ -50,7 +70,13 @@ const BANNED = [
   /\border\b/i, /\bpesan\b/i, /\bbeli\b/i, /\bbayar\b/i, /harga/i, /\bdm\b/i, /inbox/i, /hubungi/i, /\bdaftar\b/i,
   /promo/i, /diskon/i, /kontak/i, /telegram/i, /whats ?app/i, /\bwa\b/i, /wa\.me/i, /\big\b/i, /instagram/i, /discord/i,
   /youtube/i, /\bgrup\b/i, /\bgroup\b/i, /\blink\b/i, /\bbio\b/i, /\bnomor\b/i, /shopee/i, /tokopedia/i,
-  /anjing/i, /bangsat/i, /goblok/i, /tolol/i, /kontol/i, /memek/i, /\bbabi\b/i
+  /anjing/i, /bangsat/i, /goblok/i, /tolol/i, /kontol/i, /memek/i, /\bbabi\b/i,
+  // no first-person experience claims
+  /\b(aku|gue|gw|saya)\b/i, /\b(tangan|main|rank|aim|setting|settingan|setingan|gameplay|senjata|mouse|tim|akun|skill)ku\b/i,
+  // no before/after stories or result claims
+  /\bdulu\b[^.!?]{0,80}\bsekarang\b/i, /\bberkat\b/i, /langsung (jago|pro|menang|naik|jadi)/i, /\bdijamin\b/i,
+  // obvious typos, glued words (camelCase like "matchRanked") and Malay words
+  /(\p{L})\1\1/iu, /\bkepas\b/i, /\b\p{Ll}+\p{Lu}\p{Ll}/u, /\b(cakap|sahaja|awak)\b/i
 ];
 
 const BAD_TAG = /(cheat|citer|hack|aimbot|wallhack|inject|script|apk|bug|jual|giveaway|gratis|free|helper|assist|aplikasi|sistem|software|tool|coach|panduan|tutorial|tuts|guide|tips|gemini|gpt|openai|groq|bot|order|beli|bayar|harga|inbox|promo|diskon|telegram|whatsapp|instagram|discord|youtube|grup|group|link|bio|nomor|shopee|tokopedia|antiban|auto)/;
@@ -112,8 +138,9 @@ function fixEmoji(caption) {
 }
 
 // Validates and normalizes a {title, caption, hashtags} candidate against rule D and the recent list.
+// When angle is given, the text must match that angle's must/avoid words.
 // Returns { ok: true, cand } or { ok: false, reason }.
-function validateCandidate(o, recent) {
+function validateCandidate(o, recent, angle) {
   if (!o || typeof o !== 'object') return { ok: false, reason: 'bukan objek' };
   let title = String(o.title ?? '').replace(/\s+/g, ' ').trim();
   let caption = String(o.caption ?? '').replace(/\s+/g, ' ').trim();
@@ -125,6 +152,9 @@ function validateCandidate(o, recent) {
   if (caption.length < 40 || caption.length > 180) return { ok: false, reason: 'panjang caption ' + caption.length };
   const v = violations(title + ' \n ' + caption);
   if (v.length) return { ok: false, reason: 'melanggar: ' + v.slice(0, 3).join(', ') };
+  const rule = angle ? ANGLE_RULES[angle] : null;
+  if (rule && !rule.must.test(title + ' ' + caption)) return { ok: false, reason: 'tidak nyambung dengan sudut pandang: ' + angle };
+  if (rule && rule.avoid && rule.avoid.test(title + ' ' + caption)) return { ok: false, reason: 'keluar topik untuk sudut pandang: ' + angle };
   const nt = norm(title), nc = norm(caption), open = opening(caption);
   for (const r of recent || []) {
     if (r.title && (norm(r.title) === nt || jaccard(r.title, title) >= 0.6)) return { ok: false, reason: 'judul mirip: ' + r.title };
@@ -181,7 +211,11 @@ const SYSTEM_PROMPT = [
   'kata panduan, tutorial, tuts, guide, tips; cheat, citer, hack, aimbot, wallhack, inject, script, mod, bug abuse, jual beli akun, giveaway, gratis diamond/cash; helper, assistant, aplikasi, sistem, software, tools, coaching, coach;',
   'frasa "seperti di video"; klaim auto aim, auto headshot, tembus tembok, pasti menang, anti-ban, pasti naik rank, langsung pro; menyebut AI, Gemini, ChatGPT, bot; kata kasar, SARA, provokasi, clickbait menyesatkan.',
   'Format: title maks 50 karakter tanpa hashtag; caption 80-170 karakter tanpa hashtag, berisi 1-2 emoji; hashtags 4-6 item huruf kecil tanpa spasi, wajib #fyp, sisanya relevan dengan Point Blank/gaming (boleh dari: ' + HASHTAG_POOL.join(' ') + ').',
-  'Pakai bahasa Indonesia gaul yang wajar dan tanpa salah ketik; hindari istilah bahasa Inggris yang tidak perlu (tulis "sensitivitas", bukan "sensitivity").',
+  'Bahasa: Indonesia santai yang wajar dan mudah dibaca, tanpa salah ketik (contoh salah: "kepas", harusnya "udah pas"; "matchRanked", harusnya "match ranked"); pakai kosakata Indonesia sehari-hari, bukan bahasa Melayu (jangan "cakap", "sahaja", "awak"); hindari istilah bahasa Inggris yang tidak perlu (tulis "sensitivitas", bukan "sensitivity").',
+  'Judul harus kalimat yang masuk akal dan langsung dimengerti. Contoh judul yang SALAH karena janggal: "Aku Suka Punya Map Rotasi yang Bikin Poin".',
+  'Sapa penonton dengan "kamu" atau "lo". DILARANG sudut pandang orang pertama atau klaim pengalaman pribadi: "aku", "gue", "saya", kata berakhiran -ku seperti "tanganku", "dulu aku ...".',
+  'DILARANG pola sebelum/sesudah dan klaim hasil: "dulu ... sekarang ...", "berkat ...", "langsung jago", "dijamin".',
+  'Isi judul dan caption WAJIB nyambung dengan sudut pandang yang diminta dan tidak melebar ke topik lain (misalnya topik ping/lag membahas koneksi dan setting grafis, bukan mouse atau aim).',
   'Tulis kalimat yang BENAR-BENAR BARU: jangan meniru, memparafrasekan, atau memakai pola pembuka yang sama dengan daftar caption terakhir yang diberikan.',
   'Balas HANYA JSON valid: {"title":"...","caption":"...","hashtags":["#fyp","..."]}'
 ].join('\n');
@@ -190,7 +224,7 @@ function buildUserPrompt(ctx) {
   const lines = (ctx.recent || []).filter(r => r.title && !violations(r.title + ' ' + r.caption).length).slice(0, 20).map((r, i) => (i + 1) + '. ' + r.title + ' — ' + r.caption);
   return [
     'Akun: @' + ctx.account + ' (slot ' + ctx.slot + ' WIB).',
-    'Sudut pandang konten: ' + ctx.angle + '.',
+    'Sudut pandang konten: ' + ctx.angle + (ANGLE_RULES[ctx.angle] ? ' (fokus: ' + ANGLE_RULES[ctx.angle].focus + ')' : '') + '.',
     'Gaya pembuka: ' + ctx.hook + '.',
     lines.length ? 'Caption terakhir (JANGAN mirip, jangan pakai judul/pembuka yang sama):\n' + lines.join('\n') : 'Belum ada caption sebelumnya.',
     'Tulis 1 judul, 1 caption, dan hashtag sesuai aturan. Balas JSON saja.'
@@ -203,6 +237,7 @@ function libHash() {
   const src = [pick, shuffle, norm, tokens, jaccard, violations, cleanLegacy, normTag, finalizeTags, fixEmoji,
     validateCandidate, parseJsonText, parseModelResponse, parseRecent, manualFallback, buildUserPrompt, opening, pickFresh].map(f => f.toString()).join('\n')
     + JSON.stringify([ACCOUNTS_HINT, HASHTAG_POOL, ANGLES, HOOKS, MANUAL_POOL, BANNED.map(String), String(BAD_TAG), BAD_TAG_EXACT,
+      Object.entries(ANGLE_RULES).map(([k, r]) => [k, r.focus, String(r.must), String(r.avoid)]),
       String(EMOJI_RE), EXTRA_EMOJI, SYSTEM_PROMPT]);
   let h = 0x811c9dc5;
   for (let i = 0; i < src.length; i++) { h ^= src.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; }

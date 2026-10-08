@@ -21,7 +21,9 @@ const ctx = { account: row.account_name || 'pointblank', slot, angle: pickFresh(
 const user = buildUserPrompt(ctx);
 const seed = Math.floor(Math.random() * 1000000);
 const messages = [{ role: 'system', content: SYSTEM_PROMPT }, { role: 'user', content: user }];
-const groqBody = model => ({ model, messages, temperature: 0.95, max_completion_tokens: 1024, seed,
+// Moderate temperature: variety comes from angle/hook rotation and the recent list, not from randomness,
+// and higher values produced odd or Malay-sounding phrases in tests.
+const groqBody = model => ({ model, messages, temperature: 0.7, max_completion_tokens: 1024, seed,
   response_format: { type: 'json_object' }, ...(MODEL_PARAMS[model] || {}) });
 return {
   json: {
@@ -29,6 +31,6 @@ return {
     groqBody1: groqBody(GROQ_MODEL_1),
     groqBody2: groqBody(GROQ_MODEL_2),
     geminiBody: { systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] }, contents: [{ role: 'user', parts: [{ text: user }] }],
-      generationConfig: { responseMimeType: 'application/json', temperature: 1, maxOutputTokens: 1024, seed } }
+      generationConfig: { responseMimeType: 'application/json', temperature: 0.8, maxOutputTokens: 1024, seed } }
   }
 };
