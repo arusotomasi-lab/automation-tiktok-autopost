@@ -1,7 +1,7 @@
 # PROGRESS — TikTok Automation Promo Video
 
 CURRENT CHECKPOINT:
-10 — Audio mix complete
+11 — Pre-render validation complete
 
 COMPLETED:
 [✓] 01 Repository audit (docs/AUDIT.md)
@@ -14,11 +14,11 @@ COMPLETED:
 [✓] 08 Original music (scripts/audio/music.py, procedural 120 BPM A minor, section dynamics)
 [✓] 09 Indonesian vocal / song (sung: Piper TTS + WORLD retune, double + harmony; Whisper QA transcribes ~all lines correctly)
 [✓] 10 Audio mix (public/audio/final-mix.wav: 48 kHz stereo 24-bit, 44.00 s, ~-14 LUFS, peak -1 dBFS, vocal +6.5 dB over music, 0 clipped samples)
-[ ] 11 Pre-render validation
+[✓] 11 Pre-render validation (tsc OK; stills incl. transitions + last frame OK; audio 44.00 s matches 1320 frames)
 [ ] 12 Final MP4 rendered and verified
 
 CURRENT TASK:
-Pre-render validation (typecheck, stills of all scenes), then render video (muted) and mux with final-mix.wav.
+Render: npm run render:video (muted, -> cache/scene-renders/video-noaudio.mp4), then npm run mux -> output/tiktok-automation-promo.mp4, then npm run qa.
 
 NEXT:
 Vocal (Piper TTS id_ID + WORLD pitch retune) → SFX → mix → render → QA.
@@ -45,7 +45,7 @@ cd scripts/audio && ../../.venv/Scripts/python.exe music.py && ../../.venv/Scrip
 LAST SUCCESSFUL TEST: npm run check (tsc) OK
 LAST SUCCESSFUL PREVIEW: stills frames 60–1315 (all 11 scenes) rendered OK
 AUDIO STATUS: final-mix.wav done (regenerate: see RESUME). Stems music.wav, vocal.wav, sfx.wav generated in cache/audio (regenerable). Vocal QA: whisper.cpp small (id) on dry lead heard all lines; on full mix 10/11 lines recognisable (caption line weakest, lyric captions on screen cover it); minor: terjadwal/tercatat -> terjatuh, peringatan -> teringatan.
-RENDER STATUS: not started
+RENDER STATUS: starting full render (1320 frames)
 FINAL OUTPUT: not created
 
 PRODUCTION SAFETY:
