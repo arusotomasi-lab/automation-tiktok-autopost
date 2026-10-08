@@ -56,3 +56,11 @@ Semua jalur menghasilkan caption. Tidak ada eksekusi yang error.
 ## Batas pemakaian Groq (dari header respons)
 
 Per model: 1000 request/hari dan 8000 token/menit. Satu caption memakan ±1,0–1,9 ribu token. Kebutuhan 3 posting/hari (ditambah Ingest) jauh di bawah batas ini.
+
+## Uji rollback: kedua node Groq di-*disable*
+
+Node yang di-disable meneruskan input apa adanya. Akibatnya "Cek Groq Utama/Cadangan" menolak hasilnya ("respons tidak dikenal") dan alur pindah ke Gemini tanpa jeda.
+
+Pada uji ini Gemini 3.1-flash-lite **timeout di 12 detik**. Caption tetap terbentuk dari cadangan manual dalam ±12 detik. Karena itu timeout Gemini dinaikkan ke **15 detik**.
+
+Total waktu terburuk sekarang ±5 + 12 + 12 + 15 ≈ 44 detik. Rollback "pakai Gemini saja" tetap aman, tapi Gemini sendiri kadang lambat atau 503, jadi cadangan Ingest dan manual tetap diperlukan.
