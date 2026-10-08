@@ -95,3 +95,20 @@ Catatan untuk owner:
 Uji PATCH "Simpan Caption Final" (format sama, ke id yang tidak ada): sukses, tanpa error tipe `text[]`/`jsonb`, alur tetap lanjut (`alwaysOutputData`).
 
 Draft Publish `806e351a`: keempat Code node diverifikasi **identik byte demi byte** dengan `n8n/code/dist/caption-nodes.json`.
+
+## v6: larangan klaim hasil ringan (lib_hash `9d11da3a`)
+
+Ditambahkan ke prompt dan regex `BANNED`: "naik drastis"/`drastis`, meroket/melonjak/melesat, "performa (…) naik/meningkat", "peluang (…) besar/naik/meningkat/tinggi", auto/pasti/gampang/mudah menang, "rank (…) naik", "naik rank", winrate, "pasti jago/naik/pro". Prompt menyarankan cukup bilang main jadi lebih nyaman, rapi, atau terkontrol. Tes lokal menolak 9 contoh klaim ringan, tetap menerima pesan inti ("makin rapi dan makin jago"), dan seluruh 12 cadangan manual tetap valid.
+
+4 run berantai, qwen utama, tanpa simulasi gagal (semua `groq_utama` qwen/qwen3.8-27b, `lib_hash` `9d11da3a`):
+
+| # | Akun | Judul | Caption | Hashtag | Sudut pandang | Waktu |
+|---|---|---|---|---|---|---|
+| 1 | @cheatpointblank90 | Evaluasi kesalahan tiap ronde di PB | Fakta: banyak yang main PB tanpa evaluasi. Coba catat kesalahan lo tiap ronde. Dengan setting dan strategi yang tepat, gameplay lo jadi lebih rapi dan terkontrol. 🎯📝 | #fyp #pointblank #pbindonesia #gamingindonesia #settingpb | evaluasi | 0,51 s |
+| 2 | @citlahhh | Rotasi acak bikin PB susah? | Main PB sering kaga jelas arah? Coba atur rotasi dan cara baca map biar posisi lo lebih rapi. Gameplay jadi lebih terkontrol dan nyaman. 🗺️🎯 | #fyp #pointblank #pbindonesia #gamingindonesia #settingpb | rotasi/map | 0,52 s |
+| 3 | @cheatpointblank198 | Cover jelek bikin PB stres? | Sering kaget kena tembak dari sudut buta? Coba atur posisi dan baca cover biar main lo lebih aman. Gameplay jadi rapi dan terkontrol. 🛡️🎯 | #fyp #pointblank #pbindonesia #gamingindonesia #pointblankindonesia | posisi/cover | 0,50 s |
+| 4 | @cheatpointblank90 | Recoil PB Bikin Nyengir? Atur Dulu! | Eh, spray sering naik ke langit? Coba atur sensitivitas dan cara tahan tombol tembak biar peluru lo lebih rapi. Main jadi lebih nyaman dan terkontrol. 🎯💨 | #fyp #pointblank #pbindonesia #settingpb #fpsgame | recoil/spray | 0,56 s |
+
+Tidak ada klaim hasil (ringan maupun berat), tanpa orang pertama, semua nyambung dengan sudut pandangnya dan unik satu sama lain. Penutup "rapi/terkontrol/nyaman" kini sering berulang; ini wajar karena memang diarahkan prompt, dan dedupe pembuka/Jaccard tetap lolos.
+
+Draft Publish `e537d5a1-71a0-4560-a5ca-4d29f8946fcb`: keempat Code node diverifikasi **identik byte demi byte** dengan `n8n/code/dist/caption-nodes.json`. Versi live masih `dff4c706`.

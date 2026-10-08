@@ -183,5 +183,22 @@ assert.ok(/DILARANG sudut pandang orang pertama/.test(prepRule.groqBody1.message
 assert.strictEqual(prepRule.groqBody1.temperature, 0.7);
 assert.ok(validateCandidate({ ...base2, caption: 'Main PvP bareng tim? Atur tarikan recoil dan spray biar tembakan makin rapi tiap ronde 🎯' }, []).ok, 'PvP bukan camelCase');
 
+// soft result claims (owner 9 Okt ±02:20)
+for (const bad of [
+  'Callout yang jelas bikin strategi tim makin rapi dan performa naik drastis tiap ronde 🎯',
+  'Jaga mood biar tetap fokus. Mental stabil, performa naik, spray makin rapi 🎮',
+  'Atur timing pasang bom biar gameplay lebih rapi dan peluang menang makin besar 💣',
+  'Atur recoil kamu biar spray rapi dan auto menang tiap ronde 🎯',
+  'Latihan tarikan recoil tiap hari biar rank kamu naik terus 🎯',
+  'Biasain kontrol spray biar cepat naik rank dan makin jago 🎯',
+  'Spray rapi bikin winrate kamu naik pelan-pelan tiap minggu 🎯',
+  'Atur recoil biar skill kamu meroket dalam seminggu 🎯',
+  'Kontrol spray yang pas bikin kamu gampang menang duel 🎯'
+]) assert.ok(!validateCandidate({ ...base2, caption: bad }, []).ok, 'klaim hasil harus ditolak: ' + bad);
+// the core message stays allowed
+assert.ok(validateCandidate({ ...base2, caption: 'Atur tarikan recoil pelan-pelan biar spray kamu makin rapi dan main makin jago tiap ronde 🎯' }, []).ok);
+assert.ok(/peluang menang makin besar/.test(prepRule.groqBody1.messages[0].content), 'larangan klaim ringan ada di prompt');
+for (const m of MANUAL_POOL) assert.ok(validateCandidate({ ...m, hashtags: [] }, []).ok, 'pool tetap valid: ' + m.title);
+
 console.log('CAPTION PUBLISH OK');
 console.log('lib_hash', L.__L.libHash());

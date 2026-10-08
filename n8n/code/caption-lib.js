@@ -75,6 +75,10 @@ const BANNED = [
   /\b(aku|gue|gw|saya)\b/i, /\b(tangan|main|rank|aim|setting|settingan|setingan|gameplay|senjata|mouse|tim|akun|skill)ku\b/i,
   // no before/after stories or result claims
   /\bdulu\b[^.!?]{0,80}\bsekarang\b/i, /\bberkat\b/i, /langsung (jago|pro|menang|naik|jadi)/i, /\bdijamin\b/i,
+  // no soft result claims ("performa naik", "naik drastis", "peluang menang makin besar", "rank naik", ...)
+  /drastis/i, /\b(meroket|melonjak|melesat)\b/i, /performa\s+(\S+\s+){0,2}(naik|meningkat|melonjak)/i,
+  /peluang\s+(\S+\s+){0,3}(besar|naik|meningkat|tinggi)/i, /\b(auto|pasti|gampang|mudah)\s*menang\b/i,
+  /\brank\s+(\S+\s+){0,2}(naik|melesat|meroket)/i, /\bnaik\s+rank\b/i, /win\s*rate/i, /pasti\s+(jago|naik|pro|win)\b/i,
   // obvious typos, glued words (camelCase like "matchRanked") and Malay words
   /(\p{L})\1\1/iu, /\bkepas\b/i, /\b\p{Ll}+\p{Lu}\p{Ll}/u, /\b(cakap|sahaja|awak)\b/i
 ];
@@ -215,6 +219,7 @@ const SYSTEM_PROMPT = [
   'Judul harus kalimat yang masuk akal dan langsung dimengerti. Contoh judul yang SALAH karena janggal: "Aku Suka Punya Map Rotasi yang Bikin Poin".',
   'Sapa penonton dengan "kamu" atau "lo". DILARANG sudut pandang orang pertama atau klaim pengalaman pribadi: "aku", "gue", "saya", kata berakhiran -ku seperti "tanganku", "dulu aku ...".',
   'DILARANG pola sebelum/sesudah dan klaim hasil: "dulu ... sekarang ...", "berkat ...", "langsung jago", "dijamin".',
+  'DILARANG juga klaim hasil ringan: "naik drastis", "performa naik", "peluang menang makin besar", "pasti menang", "auto menang", "gampang menang", "rank naik", "naik rank", "winrate naik". Cukup bilang main jadi lebih nyaman, rapi, atau terkontrol.',
   'Isi judul dan caption WAJIB nyambung dengan sudut pandang yang diminta dan tidak melebar ke topik lain (misalnya topik ping/lag membahas koneksi dan setting grafis, bukan mouse atau aim).',
   'Tulis kalimat yang BENAR-BENAR BARU: jangan meniru, memparafrasekan, atau memakai pola pembuka yang sama dengan daftar caption terakhir yang diberikan.',
   'Balas HANYA JSON valid: {"title":"...","caption":"...","hashtags":["#fyp","..."]}'
