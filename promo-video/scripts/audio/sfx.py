@@ -138,7 +138,7 @@ GEN = {
     'drop': lambda: (drop_in(), 0.6), 'count': lambda: (count_ticks(1.6), 0.45), 'count_down': lambda: (count_ticks(1.5, True), 0.5),
     'tick_roll': lambda: (tick_roll(), 0.5), 'select': lambda: (success(), 0.6), 'scan': lambda: (scan(), 0.5),
     'confirm': lambda: (confirm(), 0.45), 'deny': lambda: (deny(), 0.55), 'success': lambda: (success(), 0.5),
-    'data': lambda: (data_stream(), 0.5), 'type': lambda: (typing(), 0.4), 'pop': lambda: (pop_(), 0.5),
+    'data': lambda: (data_stream(), 0.32), 'type': lambda: (typing(), 0.26), 'pop': lambda: (pop_(), 0.5),
     'tick': lambda: (tick_roll(1.2), 0.3), 'pulse': lambda: (pulse(), 0.45), 'warning': lambda: (warning(), 0.55),
     'pulse_alert': lambda: (pulse(), 0.5), 'notify': lambda: (notify(), 0.7), 'shimmer': lambda: (shimmer(), 0.6),
     # musical fx (riser/impact) live in music.py; keep these cues silent here
