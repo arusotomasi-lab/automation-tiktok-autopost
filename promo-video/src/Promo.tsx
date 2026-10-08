@@ -10,6 +10,10 @@ import { S04Duplicate } from './scenes/S04Duplicate';
 import { S05Caption } from './scenes/S05Caption';
 import { S06Schedule } from './scenes/S06Schedule';
 import { S07Publish } from './scenes/S07Publish';
+import { S08Success } from './scenes/S08Success';
+import { S09Archive } from './scenes/S09Archive';
+import { S10Stock } from './scenes/S10Stock';
+import { S11Final } from './scenes/S11Final';
 
 export const Promo: React.FC<{ withAudio?: boolean }> = ({ withAudio }) => (
   <AbsoluteFill style={{ backgroundColor: '#040508' }}>
@@ -21,6 +25,10 @@ export const Promo: React.FC<{ withAudio?: boolean }> = ({ withAudio }) => (
     <SceneSlot k="caption"><S05Caption /></SceneSlot>
     <SceneSlot k="schedule"><S06Schedule /></SceneSlot>
     <SceneSlot k="publish"><S07Publish /></SceneSlot>
+    <SceneSlot k="success"><S08Success /></SceneSlot>
+    <SceneSlot k="archive"><S09Archive /></SceneSlot>
+    <SceneSlot k="stock"><S10Stock /></SceneSlot>
+    <SceneSlot k="final" exit={false}><S11Final /></SceneSlot>
     <Hud />
     <Lyrics />
     <Finish />

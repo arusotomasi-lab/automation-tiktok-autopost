@@ -1,7 +1,7 @@
 # PROGRESS — TikTok Automation Promo Video
 
 CURRENT CHECKPOINT:
-05 — Scenes 04–07 complete
+07 — Camera and motion system complete
 
 COMPLETED:
 [✓] 01 Repository audit (docs/AUDIT.md)
@@ -9,8 +9,8 @@ COMPLETED:
 [✓] 03 Base composition and visual system (Stage3D camera, Background, HUD, lyrics overlay, UI kit)
 [✓] 04 Scenes 01–03
 [✓] 05 Scenes 04–07
-[ ] 06 Scenes 08–11
-[ ] 07 Camera and motion system
+[✓] 06 Scenes 08–11
+[✓] 07 Camera and motion system (per-scene Stage3D camera rigs, push-through transitions, HUD rail)
 [ ] 08 Original music
 [ ] 09 Indonesian vocal / song
 [ ] 10 Audio mix
@@ -18,10 +18,10 @@ COMPLETED:
 [ ] 12 Final MP4 rendered and verified
 
 CURRENT TASK:
-Build scenes 08–11 (success, archive, stock alert, final).
+Original music (procedural, 120 BPM, A minor) via portable Python (uv) + numpy.
 
 NEXT:
-Base composition → scenes → audio → render.
+Vocal (Piper TTS id_ID + WORLD pitch retune) → SFX → mix → render → QA.
 
 KNOWN ISSUES:
 - Komputer lokal tidak bisa membuka r2.dev (tidak dibutuhkan untuk video).
@@ -37,7 +37,7 @@ node scripts/stills.mjs 100 400    # preview stills -> cache/stills
 npm run preview                    # Remotion Studio
 
 LAST SUCCESSFUL TEST: npm run check (tsc) OK
-LAST SUCCESSFUL PREVIEW: stills frames 60–870 (scenes 01–07) rendered OK
+LAST SUCCESSFUL PREVIEW: stills frames 60–1315 (all 11 scenes) rendered OK
 AUDIO STATUS: not started
 RENDER STATUS: not started
 FINAL OUTPUT: not created
