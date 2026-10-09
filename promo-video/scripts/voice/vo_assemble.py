@@ -11,20 +11,13 @@ import librosa
 import soundfile as sf
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'audio'))
+sys.path.insert(0, os.path.dirname(__file__))
+from vo_assemble_lib import wsola_speed  # noqa: E402
 from dsp import SR, ROOT, n, biquad, compress, reverb_ir, reverb, soft_clip, envelope_follow  # noqa: E402
 
 V2 = os.path.join(ROOT, 'cache', 'voice', 'v2')
 VO = json.load(open(os.path.join(ROOT, 'src', 'audio', 'voiceover.json'), encoding='utf-8'))['lines']
 DUR = json.load(open(os.path.join(ROOT, 'src', 'audio', 'song.json'), encoding='utf-8'))['duration'] + 2.0
-
-
-def wsola_speed(y, rate):
-    """Time-domain WSOLA speed-up (keeps pitch and timbre; the phase vocoder smeared the voice)."""
-    from audiotsm import wsola
-    from audiotsm.io.array import ArrayReader, ArrayWriter
-    w = ArrayWriter(1)
-    wsola(1, speed=rate, frame_length=512, synthesis_hop=128).run(ArrayReader(y[None, :]), w)
-    return w.data[0]
 
 
 def deess(x, f=6500, thresh_db=-30, ratio=4.0):

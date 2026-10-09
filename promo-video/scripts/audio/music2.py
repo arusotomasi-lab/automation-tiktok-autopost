@@ -258,8 +258,7 @@ for t in at_beats(15, 33, BEAT):
         if t >= 24:
             place(L['drums'], pan(SN, -0.05), t, 0.35)
 # pickups / fills
-for k, t in enumerate(np.arange(10.5, 11.0, BEAT / 4)):
-    place(L['drums'], pan(SN, 0), t, 0.18 + 0.08 * k)
+# (no pickup fill at 10.5-11.0: it masked the final /k/ of 'secara acak' in the narration)
 for k, t in enumerate(np.arange(23.0, 24.0, BEAT / 4)):
     place(L['drums'], pan(SN, (k % 2) * 0.3 - 0.15), t, 0.12 + 0.05 * k)
 for k, t in enumerate(np.arange(38.0, 40.0, BEAT / 4)):

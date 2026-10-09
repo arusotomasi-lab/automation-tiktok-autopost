@@ -1,7 +1,7 @@
 # PROGRESS — TikTok Automation Promo Video
 
 CURRENT CHECKPOINT:
-A5 — Audio mix finalized
+A6 — V2 COMPLETE (rendered and verified)
 
 COMPLETED:
 [✓] 01 Repository audit (docs/AUDIT.md)
@@ -24,10 +24,10 @@ AUDIO OVERHAUL (V2):
 [✓] A3 Music finalized: scripts/audio/music2.py (120 BPM A minor; intro ambience+pulse, beat at warehouse, scanner rhythm, AI arp+motif, drop at publishing, POSTED lift, pull-back at low stock, final braam on "Otomatiskan semuanya"; chord check 19/21; spectrum 59/15/17/7%)
 [✓] A4 SFX finalized: scripts/audio/sfx2.py (transition bus + detail bus, cues per animation)
 [✓] A5 Audio mix finalized: public/audio/final-mix-v2.wav (47.5 s, -14.2 LUFS, peak -1.5 dBFS, 0 clipped; voice +8.8 dB over ducked music, music +4.1 dB in gaps; whisper-turbo on full mix CER 0.5%)
-[ ] A6 Final render V2 -> output/tiktok-automation-promo-v2.mp4
+[✓] A6 Final render V2: output/tiktok-automation-promo-v2.mp4 — 1080x1920, 30 fps, 47.50 s, H.264 + AAC LC 48 kHz stereo (streams verified), full decode clean, no black frames, peak -1.36 dBFS. Audio decoded from the MP4 re-transcribed by whisper-turbo (CER 0.2%). "secara acak": text was already correct everywhere; the final /k/ was masked by a snare fill + whoosh at 10.5-11 s -> fill removed, whoosh moved to 11.12 s; now heard as "acak". V1 kept at output/tiktok-automation-promo-v1.mp4.
 
 CURRENT TASK:
-Render V2 video (47.5 s) and mux final-mix-v2.wav -> output/tiktok-automation-promo-v2.mp4, then QA.
+None. V2 COMPLETE.
 
 NEXT:
 Optional only: owner review of the video.
@@ -56,8 +56,8 @@ cd scripts/audio && ../../.venv/Scripts/python.exe music.py && ../../.venv/Scrip
 LAST SUCCESSFUL TEST: npm run qa PASS (h264 1080x1920 30 fps, AAC 48 kHz stereo, 44.00 s, full decode clean, no black frames, audio peak -1.15 dBFS, RMS -16.8 dB)
 LAST SUCCESSFUL PREVIEW: cache/stills/final-sheet.jpg from the final MP4 (all 11 scenes present, text inside safe margins, Telegram low-stock scene visible, final frame correct)
 AUDIO STATUS: final-mix.wav done (regenerate: see RESUME). Stems music.wav, vocal.wav, sfx.wav generated in cache/audio (regenerable). Vocal QA: whisper.cpp small (id) on dry lead heard all lines; on full mix 10/11 lines recognisable (caption line weakest, lyric captions on screen cover it); minor: terjadwal/tercatat -> terjatuh, peringatan -> teringatan.
-RENDER STATUS: re-rendered 10 Okt 2026 with brief values (08:00/12:00/18:00, 90 -> 9 VIDEOS LEFT, FILE HASH, THRESHOLD DETECTED -> TELEGRAM ALERT); 1320/1320 frames, muxed with final-mix.wav
-FINAL OUTPUT: promo-video/output/tiktok-automation-promo.mp4 — 25.6 MB, 1080x1920, 30 fps, 44.00 s, H.264 + AAC 320k stereo 48 kHz (gitignored; regenerate with npm run render:video && npm run mux)
+RENDER STATUS: V2 rendered 10 Okt 2026 (1425 frames) -> cache/scene-renders/video-noaudio-v2.mp4, muxed with public/audio/final-mix-v2.wav (npm run render:video && node scripts/mux.mjs && node scripts/qa.mjs output/tiktok-automation-promo-v2.mp4)
+FINAL OUTPUT: V2 promo-video/output/tiktok-automation-promo-v2.mp4 (47.5 s, 1080x1920, 30 fps, AAC 48 kHz stereo); V1 promo-video/output/tiktok-automation-promo-v1.mp4 (both gitignored, regenerable)
 
 PRODUCTION SAFETY:
 All MCP use was read-only. n8n/Supabase/Cloudflare/Buffer/TikTok/Railway modified: NO. Credentials modified: NO. Production workflow executed: NO.

@@ -158,7 +158,7 @@ def shimmer(d=2.6):
 trans = np.zeros((2, n(DUR)))   # transitions / camera
 det = np.zeros((2, n(DUR)))     # UI detail
 # scene transitions (push-through camera): soft cinematic whooshes, alternating direction
-for i, t in enumerate([3.78, 7.8, 10.8, 14.8, 19.8, 23.8, 29.8, 32.8, 35.8, 39.75]):
+for i, t in enumerate([3.78, 7.8, 11.12, 14.8, 19.8, 23.8, 29.8, 32.8, 35.8, 39.75]):
     place(trans, whoosh(0.62, 400, 3800, 10 + i, -0.7 if i % 2 else 0.7, 0.7 if i % 2 else -0.7), t - 0.25, 0.42)
 # opening: three cards fly in, chips light, lines connect, core appears
 for k, t in enumerate([0.2, 0.43, 0.67]):

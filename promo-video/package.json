@@ -7,7 +7,7 @@
     "preview": "remotion studio src/index.ts",
     "check": "tsc --noEmit",
     "still": "node scripts/stills.mjs",
-    "render:video": "remotion render src/index.ts Promo cache/scene-renders/video-noaudio.mp4 --muted --codec=h264 --crf=16 --concurrency=4",
+    "render:video": "remotion render src/index.ts Promo cache/scene-renders/video-noaudio-v2.mp4 --muted --codec=h264 --crf=16 --concurrency=6 --gl=angle",
     "audio": "node scripts/audio.mjs",
     "mux": "node scripts/mux.mjs",
     "qa": "node scripts/qa.mjs"
