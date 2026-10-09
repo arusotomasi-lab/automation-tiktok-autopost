@@ -102,36 +102,40 @@
   {
    "id": "11_alert",
    "at": 37.95,
-   "max": 40.1,
+   "max": 40.4,
    "text": "peringatan langsung masuk ke Telegram.",
    "say": [
     "peringatan langsung masuk ke Telegram."
    ],
-   "ex": 0.6,
-   "cfg": 0.35
+   "ex": 0.75,
+   "cfg": 0.3,
+   "temp": 0.7
   },
   {
    "id": "12_final",
-   "at": 40.25,
-   "max": 43.55,
+   "at": 40.5,
+   "max": 44.25,
    "text": "Kamu siapkan kontennya. Sistem yang mengerjakan sisanya.",
    "say": [
     "Kamu siapkan kontennya. Sistem yang mengerjakan sisanya.",
     "Kamu siapkan kontennya. Sistem yang kerjakan sisanya."
    ],
-   "cfg": 0.35
+   "cfg": 0.3,
+   "ex": 0.7,
+   "temp": 0.7
   },
   {
    "id": "13_tag",
-   "at": 43.65,
-   "max": 45.95,
+   "at": 44.4,
+   "max": 47.3,
    "text": "Upload sekali. Otomatiskan semuanya.",
    "say": [
     "Upload sekali. Otomatiskan semuanya.",
     "Aplod sekali. Otomatiskan semuanya."
    ],
-   "ex": 0.65,
-   "cfg": 0.35
+   "ex": 0.8,
+   "cfg": 0.3,
+   "temp": 0.7
   }
  ]
 }

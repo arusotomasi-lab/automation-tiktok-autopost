@@ -1,0 +1,90 @@
+{
+ "lines": [
+  {
+   "id": "01_open",
+   "start": 0.35,
+   "end": 3.81,
+   "text": "Tiga akun TikTok. Satu sistem otomatis."
+  },
+  {
+   "id": "02_ware",
+   "start": 4.25,
+   "end": 6.629,
+   "text": "Kamu cukup siapkan videonya."
+  },
+  {
+   "id": "03_pick",
+   "start": 8.05,
+   "end": 10.957,
+   "text": "Sistem memilih videonya secara acak."
+  },
+  {
+   "id": "04_dup",
+   "start": 11.15,
+   "end": 14.961,
+   "text": "Setiap video diperiksa. Tidak ada posting ganda."
+  },
+  {
+   "id": "05_ai",
+   "start": 15.25,
+   "end": 19.062,
+   "text": "Hook, caption, dan hashtag dibuat otomatis."
+  },
+  {
+   "id": "06_sched",
+   "start": 20.15,
+   "end": 23.121,
+   "text": "Setiap akun tayang sesuai jadwalnya."
+  },
+  {
+   "id": "07_pub",
+   "start": 24.3,
+   "end": 29.415,
+   "text": "Lalu konten dikirim, dan dipublikasikan ke tiga akun sekaligus."
+  },
+  {
+   "id": "08_ok",
+   "start": 30.15,
+   "end": 32.907,
+   "text": "Tanpa upload manual, setiap hari."
+  },
+  {
+   "id": "09_arch",
+   "start": 33.15,
+   "end": 35.95,
+   "text": "Yang sudah tayang, langsung diarsipkan."
+  },
+  {
+   "id": "10_stock",
+   "start": 36.05,
+   "end": 37.863,
+   "text": "Saat stok mulai menipis,"
+  },
+  {
+   "id": "11_alert",
+   "start": 37.95,
+   "end": 40.393,
+   "text": "peringatan langsung masuk ke Telegram."
+  },
+  {
+   "id": "12_final",
+   "start": 40.5,
+   "end": 44.239,
+   "text": "Kamu siapkan kontennya. Sistem yang mengerjakan sisanya."
+  },
+  {
+   "id": "13_tag",
+   "start": 44.4,
+   "end": 47.301,
+   "text": "Upload sekali. Otomatiskan semuanya."
+  }
+ ],
+ "cues": {
+  "final_line": [
+   40.5,
+   44.239
+  ],
+  "tag_start": 44.4,
+  "final_hit": 45.728
+ }
+}

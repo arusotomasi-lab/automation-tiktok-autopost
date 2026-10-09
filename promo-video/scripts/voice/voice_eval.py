@@ -14,7 +14,7 @@ import jiwer
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 FF = os.path.join(ROOT, 'node_modules', 'ffmpeg-static', 'ffmpeg.exe')
 WH = os.path.join(ROOT, '.tools', 'whisper', 'main.exe')
-WM = os.path.join(ROOT, '.tools', 'whisper', 'ggml-small.bin')
+WM = os.path.join(ROOT, '.tools', 'whisper', 'ggml-medium.bin' if os.path.exists(os.path.join(ROOT, '.tools', 'whisper', 'ggml-medium.bin')) else 'ggml-small.bin')
 _mos = None
 
 
@@ -27,12 +27,18 @@ def mos(y, sr):
         return float(_mos(torch.from_numpy(y16).float().unsqueeze(0), 16000).item())
 
 
+_wh = None
+
+
 def transcribe(path, lang):
-    tmp = path + '.16k.wav'
-    subprocess.run([FF, '-hide_banner', '-loglevel', 'error', '-y', '-i', path, '-ar', '16000', '-ac', '1', '-c:a', 'pcm_s16le', tmp], check=True)
-    out = subprocess.run([WH, '-m', WM, '-l', lang, '-nt', '-f', tmp], capture_output=True, text=True, encoding='utf-8', errors='replace').stdout
-    os.remove(tmp)
-    return ' '.join(l.strip() for l in out.splitlines() if l.strip())
+    """GPU whisper large-v3-turbo (openai-whisper) as the intelligibility judge."""
+    global _wh
+    import whisper
+    if _wh is None:
+        _wh = whisper.load_model('turbo', device='cuda', download_root=os.path.join(ROOT, '.hf', 'whisper'))
+    y, _ = librosa.load(path, sr=16000, mono=True)
+    r = _wh.transcribe(y.astype(np.float32), language=lang, fp16=True, temperature=0.0, condition_on_previous_text=False)
+    return r['text'].strip()
 
 
 def norm(t):
@@ -53,6 +59,7 @@ def analyze(path, lang, expected=None):
     if expected:
         hyp = transcribe(path, lang)
         res['wer'] = round(jiwer.wer(norm(expected), norm(hyp)), 3)
+        res['cer'] = round(jiwer.cer(norm(expected).replace(' ', ''), norm(hyp).replace(' ', '')), 3)
         res['heard'] = hyp
     return res
 

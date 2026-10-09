@@ -1,5 +1,6 @@
 // Timing shared with the audio scripts lives in src/audio/song.json (single source for picture and sound).
 import song from './audio/song.json';
+import vo from './audio/vo_timing.json';
 
 export const FPS = 30;
 export const BPM = song.bpm; // 1 beat = 15 frames, 1 bar = 60 frames
@@ -15,8 +16,8 @@ export const SCENES = song.scenes as unknown as SceneMap;
 export type SceneKey = keyof typeof SCENES;
 export const TRANSITION = 12;
 
-// Lyric lines: [start s, end s, text]. Sung over the matching scene.
-export const LYRICS: [number, number, string][] = song.lines.map((l) => [l.start, l.end, l.text]);
+// On-screen subtitles: the V2 male voice-over lines with their real start/end (from scripts/voice/vo_assemble.py).
+export const LYRICS: [number, number, string][] = vo.lines.map((l) => [l.start, l.end, l.text]);
 
 // Pipeline stages shown in the HUD; each lights up while its scene plays.
 export const STAGES: { label: string; scenes: SceneKey[] }[] = [

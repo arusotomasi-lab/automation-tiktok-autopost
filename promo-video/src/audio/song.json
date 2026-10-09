@@ -1,7 +1,7 @@
 {
   "_doc": "Single source of timing for picture and sound. Times in seconds. Melody: MIDI notes with relative durations (one per syllable, A minor, 120 BPM). Used by src/timeline.ts and scripts/audio/*.py.",
   "bpm": 120,
-  "duration": 44,
+  "duration": 47.5,
   "key": "A minor",
   "chords": [
     ["Am", 0], ["F", 2], ["C", 4], ["G", 6], ["Am", 8], ["F", 10], ["C", 12], ["G", 14],
@@ -10,7 +10,7 @@
   ],
   "scenes": {
     "opening": [0, 4], "warehouse": [4, 8], "selection": [8, 11], "duplicate": [11, 15], "caption": [15, 20],
-    "schedule": [20, 24], "publish": [24, 30], "success": [30, 33], "archive": [33, 36], "stock": [36, 40], "final": [40, 44]
+    "schedule": [20, 24], "publish": [24, 30], "success": [30, 33], "archive": [33, 36], "stock": [36, 40], "final": [40, 47.5]
   },
   "lines": [
     { "start": 0.5, "end": 3.8, "text": "Tiga akun berjalan, dalam satu sistem", "tts": "Tiga akun berjalan, dalam satu sistem.",

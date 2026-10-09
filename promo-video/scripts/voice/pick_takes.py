@@ -56,7 +56,7 @@ def pick():
     for ln in VO:
         window = ln['max'] - ln['at']
         best = None
-        for path in sorted(glob.glob(os.path.join(TAKES, f"{ln['id']}_v*_t*.wav"))):
+        for path in sorted(p for p in glob.glob(os.path.join(TAKES, f"{ln['id']}_v*_t*.wav")) if '.trim' not in p):
             y, sr = librosa.load(path, sr=None, mono=True)
             y = tighten(trim(y, sr), sr)
             tmp = path.replace('.wav', '.trim.wav')
@@ -66,7 +66,7 @@ def pick():
             need = dur / window
             fit_pen = 0 if need <= 1 else (2.0 * (need - 1) if need <= MAX_STRETCH else 5)
             male_pen = 0 if 80 <= r['f0_med'] <= 150 else 1
-            score = r['mos'] - 3 * r['wer'] - fit_pen - male_pen
+            score = r['mos'] - 6 * r['cer'] - fit_pen - male_pen
             r.update({'take': os.path.basename(path), 'trim_dur': round(dur, 2), 'window': round(window, 2), 'score': round(score, 3)})
             print(r, flush=True)
             if best is None or score > best['score']:

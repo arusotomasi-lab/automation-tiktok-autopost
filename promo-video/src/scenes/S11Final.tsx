@@ -9,6 +9,11 @@ import {
 import { GlowPath, curve } from '../workflow/Flow';
 import { easeInOut, keys, prog } from '../animation/ease';
 import { BODY, C, MONO, glow, hexA } from '../theme';
+import vo from '../audio/vo_timing.json';
+
+// Headline beats follow the voice-over: 'Upload sekali.' -> UPLOAD ONCE, 'Otomatiskan semuanya.' -> final hit.
+const T_TAG = Math.round((vo.cues.tag_start - 40) * 30);
+const T_HIT = Math.round((vo.cues.final_hit - 40) * 30);
 
 // The whole system as one connected map (snake layout, top to bottom).
 const NODES: { label: string; icon: (c: string) => React.ReactNode; x: number; y: number }[] = [
@@ -26,11 +31,14 @@ const NODES: { label: string; icon: (c: string) => React.ReactNode; x: number; y
 
 export const S11Final: React.FC = () => {
   const t = useT('final');
-  const cam = { z: keys(t, [[-6, 420], [64, -520]], easeInOut), rx: keys(t, [[-6, 34], [64, 26]]), ry: keys(t, [[-6, -14], [64, 6]]), y: keys(t, [[-6, -420], [64, -200]]) };
-  const net = 1 - 0.82 * prog(t, 56, 18);
+  // pull back to reveal the whole system, then a slow orbit while the narrator closes
+  const cam = { z: keys(t, [[-6, 420], [64, -520], [T_TAG, -640]], easeInOut), rx: keys(t, [[-6, 34], [64, 26], [T_TAG, 22]]), ry: keys(t, [[-6, -14], [64, 6], [T_TAG, 12]]), y: keys(t, [[-6, -420], [64, -200], [T_TAG, -180]]) };
+  const fadeAt = T_TAG - 14;
+  const net = 1 - 0.82 * prog(t, fadeAt, 18);
+  const flash = Math.max(0, 1 - Math.abs(t - T_HIT) / 8) * (t >= T_HIT - 2 ? 1 : 0);
   return (
     <AbsoluteFill>
-      <div style={{ position: 'absolute', inset: 0, opacity: net, filter: t > 56 ? `blur(${prog(t, 56, 18) * 6}px)` : undefined }}>
+      <div style={{ position: 'absolute', inset: 0, opacity: net, filter: t > fadeAt ? `blur(${prog(t, fadeAt, 18) * 6}px)` : undefined }}>
         <Stage3D cam={cam} originY="40%">
           <Obj x={0} y={0} z={0}>
             <div style={{ position: 'relative' }}>
@@ -57,19 +65,19 @@ export const S11Final: React.FC = () => {
           })}
         </Stage3D>
       </div>
-      <AbsoluteFill style={{ background: `radial-gradient(ellipse 70% 30% at 50% 50%, ${hexA(C.orange, 0.22 * prog(t, 60, 20))} 0%, rgba(0,0,0,0) 70%)` }} />
+      <AbsoluteFill style={{ background: `radial-gradient(ellipse 70% 30% at 50% 50%, ${hexA(C.orange, 0.22 * prog(t, T_TAG, 20) + 0.25 * flash)} 0%, rgba(0,0,0,0) 70%)` }} />
       <div style={{ position: 'absolute', top: 700, left: 0, right: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-        <Headline text="UPLOAD ONCE." start={60} size={120} />
-        <Headline text="AUTOMATE EVERYTHING." start={70} size={74} color={C.amber} glowColor={C.orange} />
+        <Headline text="UPLOAD ONCE." start={T_TAG - 3} size={120} />
+        <Headline text="AUTOMATE EVERYTHING." start={T_HIT - 4} stagger={2} size={74} color={C.amber} glowColor={C.orange} />
         <div style={{ height: 30 }} />
-        <div style={{ opacity: prog(t, 84, 14), transform: `translateY(${(1 - prog(t, 84, 14)) * 20}px)`, fontFamily: BODY, fontWeight: 500, fontSize: 32, color: C.dim, letterSpacing: 0.5 }}>
+        <div style={{ opacity: prog(t, T_HIT + 20, 14), transform: `translateY(${(1 - prog(t, T_HIT + 20, 14)) * 20}px)`, fontFamily: BODY, fontWeight: 500, fontSize: 32, color: C.dim, letterSpacing: 0.5 }}>
           3 Accounts • AI Caption • Anti Duplicate • Auto Scheduling
         </div>
         <div style={{ height: 50 }} />
-        <div style={{ opacity: prog(t, 94, 14), display: 'flex', alignItems: 'center', gap: 16 }}>
-          <div style={{ width: 60 * prog(t, 94, 14), height: 2, background: C.gold }} />
+        <div style={{ opacity: prog(t, T_HIT + 34, 14), display: 'flex', alignItems: 'center', gap: 16 }}>
+          <div style={{ width: 60 * prog(t, T_HIT + 34, 14), height: 2, background: C.gold }} />
           <div style={{ fontFamily: MONO, fontWeight: 600, fontSize: 24, letterSpacing: 8, color: C.gold }}>TIKTOK AUTOMATION SYSTEM</div>
-          <div style={{ width: 60 * prog(t, 94, 14), height: 2, background: C.gold }} />
+          <div style={{ width: 60 * prog(t, T_HIT + 34, 14), height: 2, background: C.gold }} />
         </div>
       </div>
     </AbsoluteFill>
