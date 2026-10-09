@@ -8,7 +8,7 @@ import { Pulse } from '../workflow/Flow';
 import { easeInOut, easeOut, keys, prog, rand } from '../animation/ease';
 import { C, DISPLAY, MONO, glow } from '../theme';
 
-export const STOCK = 39;
+export const STOCK = 90; // illustrative stock from the creative brief
 const COLS = 7, ROWS = 5;
 
 export const S02Warehouse: React.FC = () => {

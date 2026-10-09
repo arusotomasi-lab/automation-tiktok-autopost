@@ -1,7 +1,7 @@
 # PROGRESS — TikTok Automation Promo Video
 
 CURRENT CHECKPOINT:
-12 — COMPLETE (final MP4 rendered and verified)
+12b — Marketing values update (brief = source of truth), re-render pending
 
 COMPLETED:
 [✓] 01 Repository audit (docs/AUDIT.md)
@@ -18,7 +18,7 @@ COMPLETED:
 [✓] 12 Final MP4 rendered and verified
 
 CURRENT TASK:
-None. Project COMPLETE.
+Re-render with brief values: schedule 08:00/12:00/18:00, 90 videos -> 9 left, FILE HASH check, THRESHOLD DETECTED / TELEGRAM ALERT labels, lyric line 6 re-sung. Then npm run render:video && npm run mux && npm run qa.
 
 NEXT:
 Optional only: owner review of the video.

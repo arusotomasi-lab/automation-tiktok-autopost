@@ -8,6 +8,7 @@ import { GlowPath, Pulse } from '../workflow/Flow';
 import { bezier, easeInOut, keys, pop, prog } from '../animation/ease';
 import { C, DISPLAY, MONO, hexA } from '../theme';
 import { HERO_LABEL, HERO_SEED } from './S03Selection';
+import { STOCK } from './S02Warehouse';
 
 const QX = -250, AX = 250, BY = -140;
 
@@ -38,7 +39,7 @@ export const S09Archive: React.FC = () => {
     <AbsoluteFill>
       <Stage3D cam={cam}>
         <Obj x={QX} y={BY + 120} z={-20} ry={12}>
-          <Bin title="QUEUE" sub="videos/" icon={<IconDatabase size={64} />} count={fly > 0.05 ? 38 : 39} accent={C.amber} cards={5} seed={60} />
+          <Bin title="QUEUE" sub="videos/" icon={<IconDatabase size={64} />} count={fly > 0.05 ? STOCK - 1 : STOCK} accent={C.amber} cards={5} seed={60} />
         </Obj>
         <Obj x={AX} y={BY + 120} z={-20} ry={-12}>
           <Bin title="POSTED ARCHIVE" sub="posted/" icon={<IconArchive size={64} color={C.ok} />} count={arrived ? 1 : 0} accent={C.ok} cards={arrived ? 1 : 0} seed={HERO_SEED} />

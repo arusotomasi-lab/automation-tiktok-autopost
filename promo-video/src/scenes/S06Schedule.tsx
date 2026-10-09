@@ -7,11 +7,11 @@ import { IconClock } from '../components/Icons';
 import { easeInOut, keys, pop, prog } from '../animation/ease';
 import { C, DISPLAY, MONO, glow, hexA } from '../theme';
 
-// Live slots (posting_slots): 06:00, 07:00, 08:00 WIB.
+// Marketing schedule from the creative brief (illustration, not a live snapshot).
 export const SLOTS = [
-  { time: '06:00', acc: 'ACCOUNT 01', seed: 17 },
-  { time: '07:00', acc: 'ACCOUNT 02', seed: 23 },
-  { time: '08:00', acc: 'ACCOUNT 03', seed: 41 },
+  { time: '08:00', acc: 'ACCOUNT 01', seed: 17 },
+  { time: '12:00', acc: 'ACCOUNT 02', seed: 23 },
+  { time: '18:00', acc: 'ACCOUNT 03', seed: 41 },
 ];
 const ROW = 250, TOP = -330;
 

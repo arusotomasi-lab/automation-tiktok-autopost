@@ -29,3 +29,11 @@ Tidak ada perubahan apa pun pada n8n, Supabase, Cloudflare, Buffer, TikTok, atau
 - Brief menyebut "90 VIDEOS" dan FILE HASH; sistem nyata 39 video dan tanpa hash file, jadi dipakai angka 39 dan cek VIDEO ID / STATUS / LOCK.
 - **Peringatan stok menipis (ambang 9)** belum ada di production; yang ada notifikasi *gudang kosong*. Adegan 10 diwajibkan brief, jadi tetap ditampilkan sebagai konsep pemantauan stok. Ini catatan untuk owner, bukan perubahan sistem.
 - Contoh caption brief diganti contoh yang patuh aturan konten (tanpa kata terlarang, #fyp di depan).
+
+## Keputusan owner (10 Okt 2026)
+
+Untuk video promo, **brief kreatif adalah source of truth**, bukan nilai live production. Angka di video adalah ilustrasi marketing, bukan snapshot sistem:
+- Jadwal: ACCOUNT 01 → 08:00, ACCOUNT 02 → 12:00, ACCOUNT 03 → 18:00 WIB (lirik: "Pagi, siang, sore, semua terjadwal").
+- Gudang: 90 VIDEOS READY; adegan stok: 90 → 9 VIDEOS LEFT, alur VIDEO STOCK → THRESHOLD DETECTED → AUTOMATION → TELEGRAM ALERT.
+- Cek duplikat: VIDEO ID, FILE HASH, POSTING HISTORY, LOCK.
+Tabel dan catatan perbedaan di atas tetap sebagai catatan audit; tidak ada perubahan production.

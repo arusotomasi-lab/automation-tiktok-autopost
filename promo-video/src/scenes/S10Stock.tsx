@@ -11,9 +11,9 @@ import { STOCK } from './S02Warehouse';
 const THRESHOLD = 9;
 const CHAIN = [
   { label: 'VIDEO STOCK', icon: (c: string) => <IconDatabase size={46} color={c} /> },
-  { label: 'THRESHOLD', icon: (c: string) => <IconWarn size={46} color={c} /> },
+  { label: 'THRESHOLD DETECTED', icon: (c: string) => <IconWarn size={46} color={c} /> },
   { label: 'AUTOMATION', icon: (c: string) => <IconPulse size={46} color={c} /> },
-  { label: 'TELEGRAM', icon: (c: string) => <IconSend size={46} color={c} /> },
+  { label: 'TELEGRAM ALERT', icon: (c: string) => <IconSend size={46} color={c} /> },
 ];
 const CX = [150, 410, 670, 930];
 const CY = 870;

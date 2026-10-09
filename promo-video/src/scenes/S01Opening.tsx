@@ -29,7 +29,7 @@ export const S01Opening: React.FC = () => {
             <Obj key={i} x={c.x} y={-40 + fl} z={c.z - (1 - p) * 1400} ry={c.ry} opacity={Math.min(1, p * 1.4)}>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 22 }}>
                 <Chip size={22} solid={t > 40 + i * 6}>{ACCOUNTS[i]}</Chip>
-                <VideoCard seed={3 + i * 11} w={270} active={0.35 + 0.65 * prog(t, 40 + i * 6, 12)} label={`AUTO • ${['06:00', '07:00', '08:00'][i]}`} />
+                <VideoCard seed={3 + i * 11} w={270} active={0.35 + 0.65 * prog(t, 40 + i * 6, 12)} label={`AUTO • ${['08:00', '12:00', '18:00'][i]}`} />
               </div>
             </Obj>
           );

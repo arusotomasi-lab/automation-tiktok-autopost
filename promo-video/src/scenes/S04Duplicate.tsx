@@ -9,10 +9,10 @@ import { C, DISPLAY, MONO, glow, hexA } from '../theme';
 import { HERO_LABEL, HERO_SEED } from './S03Selection';
 
 const CHECKS = [
-  ['VIDEO ID', 'AgAD…QFY'],
+  ['VIDEO ID', 'VERIFIED'],
+  ['FILE HASH', 'UNIQUE'],
   ['POSTING HISTORY', 'NEVER POSTED'],
-  ['DATABASE STATUS', 'PENDING'],
-  ['SLOT LOCK', 'LOCKED'],
+  ['LOCK', 'LOCKED'],
 ];
 
 export const S04Duplicate: React.FC = () => {
