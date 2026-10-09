@@ -1,7 +1,7 @@
 # PROGRESS — TikTok Automation Promo Video
 
 CURRENT CHECKPOINT:
-B3 — V3 audio done (Edge TTS Ardi), pre-render
+B4 — V3 COMPLETE (rendered and verified)
 
 COMPLETED:
 [✓] 01 Repository audit (docs/AUDIT.md)
@@ -27,7 +27,7 @@ AUDIO OVERHAUL (V2):
 [✓] A6 Final render V2: output/tiktok-automation-promo-v2.mp4 — 1080x1920, 30 fps, 47.50 s, H.264 + AAC LC 48 kHz stereo (streams verified), full decode clean, no black frames, peak -1.36 dBFS. Audio decoded from the MP4 re-transcribed by whisper-turbo (CER 0.2%). "secara acak": text was already correct everywhere; the final /k/ was masked by a snare fill + whoosh at 10.5-11 s -> fill removed, whoosh moved to 11.12 s; now heard as "acak". V1 kept at output/tiktok-automation-promo-v1.mp4.
 
 CURRENT TASK:
-Render V3: npm run render:video variant -> cache/scene-renders/video-noaudio-v3.mp4, mux public/audio/final-mix-v3.wav -> output/tiktok-automation-promo-v3.mp4, QA.
+None. V3 COMPLETE.
 
 NEXT:
 Optional only: owner review of the video.
@@ -56,8 +56,8 @@ cd scripts/audio && ../../.venv/Scripts/python.exe music.py && ../../.venv/Scrip
 LAST SUCCESSFUL TEST: npm run qa PASS (h264 1080x1920 30 fps, AAC 48 kHz stereo, 44.00 s, full decode clean, no black frames, audio peak -1.15 dBFS, RMS -16.8 dB)
 LAST SUCCESSFUL PREVIEW: cache/stills/final-sheet.jpg from the final MP4 (all 11 scenes present, text inside safe margins, Telegram low-stock scene visible, final frame correct)
 AUDIO STATUS: final-mix.wav done (regenerate: see RESUME). Stems music.wav, vocal.wav, sfx.wav generated in cache/audio (regenerable). Vocal QA: whisper.cpp small (id) on dry lead heard all lines; on full mix 10/11 lines recognisable (caption line weakest, lyric captions on screen cover it); minor: terjadwal/tercatat -> terjatuh, peringatan -> teringatan.
-RENDER STATUS: V2 rendered 10 Okt 2026 (1425 frames) -> cache/scene-renders/video-noaudio-v2.mp4, muxed with public/audio/final-mix-v2.wav (npm run render:video && node scripts/mux.mjs && node scripts/qa.mjs output/tiktok-automation-promo-v2.mp4)
-FINAL OUTPUT: V2 promo-video/output/tiktok-automation-promo-v2.mp4 (47.5 s, 1080x1920, 30 fps, AAC 48 kHz stereo); V1 promo-video/output/tiktok-automation-promo-v1.mp4 (both gitignored, regenerable)
+RENDER STATUS: V3 rendered 10 Okt 2026 (1425 frames) -> cache/scene-renders/video-noaudio-v3.mp4, muxed with public/audio/final-mix-v3.wav (node scripts/mux.mjs cache/scene-renders/video-noaudio-v3.mp4 public/audio/final-mix-v3.wav output/tiktok-automation-promo-v3.mp4)
+FINAL OUTPUT: V3 promo-video/output/tiktok-automation-promo-v3.mp4 (47.5 s, 1080x1920, 30 fps, H.264 + AAC LC 48 kHz stereo); V2 and V1 kept in output/ (all gitignored, regenerable)
 
 PRODUCTION SAFETY:
 All MCP use was read-only. n8n/Supabase/Cloudflare/Buffer/TikTok/Railway modified: NO. Credentials modified: NO. Production workflow executed: NO.
@@ -71,3 +71,4 @@ V3 (ELEVENLABS DILA):
 [✓] B1b ElevenLabs dropped for V3 (Free tier disabled). V3 narration = Microsoft Edge TTS id-ID-ArdiNeural (male), rate +0%, pitch -5Hz (grid -5%/0% x -2/-5Hz tested; all CER 0). ElevenLabs takes in cache/voice/v3/ are NOT used.
 [✓] B2 Pronunciation QA: every line transcribed inside the full mix by whisper-turbo with CER 0 ("secara acak", Hook, caption, hashtag, diarsipkan, stok, peringatan). Fixes: TTS spelling "Huk" for Hook; arsip line -> "langsung diarsipkan"; arp/claps start after "Hook" (15.75/16.0 s); crash at 15 s lowered; energy SFX at 15 s removed; whoosh after archive line moved to 36.08 s; transition SFX ducked 6 dB under voice.
 [✓] B3 Mix V3: public/audio/final-mix-v3.wav (AUDIO_VER=v3 for music2/sfx2/mix2): 47.5 s, ~-14.1 LUFS, 0 clipped, voice +8.9 dB over music (ducked 5 dB), +11.1 dB over SFX, music +5.2 dB in gaps.
+[✓] B4 Render V3: output/tiktok-automation-promo-v3.mp4 — QA PASS (h264 1080x1920 30 fps, AAC 48 kHz stereo verified in streams, 47.50 s, full decode clean, no black frames, peak -1.42 dBFS). Audio decoded from the MP4: whisper-turbo transcript matches the script (CER 2.8%, only digits + end hallucination), "secara acak" heard, male voice f0 ~91 Hz, music present in gaps (-17..-20 dBFS).
