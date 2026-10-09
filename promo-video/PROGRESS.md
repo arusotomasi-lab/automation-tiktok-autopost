@@ -64,7 +64,7 @@ All MCP use was read-only. n8n/Supabase/Cloudflare/Buffer/TikTok/Railway modifie
 
 V3 (ELEVENLABS DILA):
 [✓] B0 before-elevenlabs-dila-v3: V2 kept at output/tiktok-automation-promo-v2.mp4; V2 audio stems + voiceover.v2.json + vo_timing.v2.json copied to cache/v2-audio/ (gitignored); V2 source = commit c1df37b
-[ ] B1 Dila narration generated (ElevenLabs MCP)
+[ ] B1 Dila narration generated (ElevenLabs MCP) — BLOCKED: voice "Dila - Indonesia Voice Over & Announcer" not returned by creative_list_voices (searched: "Dila", "Dila Indonesia", "Indonesia Voice Over & Announcer", "Announcer"/"Voice Over" + language id, all Indonesian female/advertisement voices). Need the voice_id from the owner (or Dila added to the workspace My Voices). No credits spent.
 [ ] B2 Pronunciation QA
 [ ] B3 Music/SFX/mix V3
 [ ] B4 Render V3 + QA
