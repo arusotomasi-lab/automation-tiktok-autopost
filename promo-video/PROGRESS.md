@@ -1,7 +1,7 @@
 # PROGRESS — TikTok Automation Promo Video
 
 CURRENT CHECKPOINT:
-A2 — Male voice finalized
+A5 — Audio mix finalized
 
 COMPLETED:
 [✓] 01 Repository audit (docs/AUDIT.md)
@@ -21,13 +21,13 @@ AUDIO OVERHAUL (V2):
 [✓] A0 Before Audio Overhaul: output/tiktok-automation-promo-v1.mp4 + cache/v1-audio/ preserved locally (gitignored); V1 source = commit d40e83b
 [✓] A1 Voice script finalized: src/audio/voiceover.json (13 lines, natural Indonesian, male VO replaces the sung vocal; final scene extended to 46 s for the tagline)
 [✓] A2 Male voice finalized: Chatterbox-TTS-Indonesian + designed male timbre (ref_male_2, f0 ~100-110 Hz). 13 lines, best of 4-6 takes by UTMOS + whisper-turbo CER (all CER 0, raw MOS 4.24-4.46, processed 3.9-4.3). WSOLA speed-up <=12% (phase vocoder rejected: MOS 1.4). Timing -> src/audio/vo_timing.json; video 47.5 s.
-[ ] A3 Music finalized (new arrangement)
-[ ] A4 SFX finalized
-[ ] A5 Audio mix finalized
+[✓] A3 Music finalized: scripts/audio/music2.py (120 BPM A minor; intro ambience+pulse, beat at warehouse, scanner rhythm, AI arp+motif, drop at publishing, POSTED lift, pull-back at low stock, final braam on "Otomatiskan semuanya"; chord check 19/21; spectrum 59/15/17/7%)
+[✓] A4 SFX finalized: scripts/audio/sfx2.py (transition bus + detail bus, cues per animation)
+[✓] A5 Audio mix finalized: public/audio/final-mix-v2.wav (47.5 s, -14.2 LUFS, peak -1.5 dBFS, 0 clipped; voice +8.8 dB over ducked music, music +4.1 dB in gaps; whisper-turbo on full mix CER 0.5%)
 [ ] A6 Final render V2 -> output/tiktok-automation-promo-v2.mp4
 
 CURRENT TASK:
-Music v2 (scripts/audio/music2.py) + SFX v2 (scripts/audio/sfx2.py) with voice cues, then mix2.
+Render V2 video (47.5 s) and mux final-mix-v2.wav -> output/tiktok-automation-promo-v2.mp4, then QA.
 
 NEXT:
 Optional only: owner review of the video.
