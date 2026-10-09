@@ -1,7 +1,7 @@
 # PROGRESS — TikTok Automation Promo Video
 
 CURRENT CHECKPOINT:
-12 — COMPLETE (final MP4 re-rendered with creative-brief values and verified)
+A0 — CHECKPOINT — Before Audio Overhaul (V1 preserved)
 
 COMPLETED:
 [✓] 01 Repository audit (docs/AUDIT.md)
@@ -15,10 +15,19 @@ COMPLETED:
 [✓] 09 Indonesian vocal / song (sung: Piper TTS + WORLD retune, double + harmony; Whisper QA transcribes ~all lines correctly)
 [✓] 10 Audio mix (public/audio/final-mix.wav: 48 kHz stereo 24-bit, 44.00 s, ~-14 LUFS, peak -1 dBFS, vocal +6.5 dB over music, 0 clipped samples)
 [✓] 11 Pre-render validation (tsc OK; stills incl. transitions + last frame OK; audio 44.00 s matches 1320 frames)
-[✓] 12 Final MP4 rendered and verified
+[✓] 12 Final MP4 rendered and verified (V1, source commit d40e83b)
+
+AUDIO OVERHAUL (V2):
+[✓] A0 Before Audio Overhaul: output/tiktok-automation-promo-v1.mp4 + cache/v1-audio/ preserved locally (gitignored); V1 source = commit d40e83b
+[ ] A1 Voice script finalized (male Indonesian voice-over, replaces sung vocal)
+[ ] A2 Male voice finalized
+[ ] A3 Music finalized (new arrangement)
+[ ] A4 SFX finalized
+[ ] A5 Audio mix finalized
+[ ] A6 Final render V2 -> output/tiktok-automation-promo-v2.mp4
 
 CURRENT TASK:
-None. Project COMPLETE.
+Audit local male Indonesian TTS options and finalize voice-over script.
 
 NEXT:
 Optional only: owner review of the video.
