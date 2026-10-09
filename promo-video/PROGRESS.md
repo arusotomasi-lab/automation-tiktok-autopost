@@ -1,7 +1,7 @@
 # PROGRESS — TikTok Automation Promo Video
 
 CURRENT CHECKPOINT:
-11 — Pre-render validation complete
+12 — COMPLETE (final MP4 rendered and verified)
 
 COMPLETED:
 [✓] 01 Repository audit (docs/AUDIT.md)
@@ -15,13 +15,13 @@ COMPLETED:
 [✓] 09 Indonesian vocal / song (sung: Piper TTS + WORLD retune, double + harmony; Whisper QA transcribes ~all lines correctly)
 [✓] 10 Audio mix (public/audio/final-mix.wav: 48 kHz stereo 24-bit, 44.00 s, ~-14 LUFS, peak -1 dBFS, vocal +6.5 dB over music, 0 clipped samples)
 [✓] 11 Pre-render validation (tsc OK; stills incl. transitions + last frame OK; audio 44.00 s matches 1320 frames)
-[ ] 12 Final MP4 rendered and verified
+[✓] 12 Final MP4 rendered and verified
 
 CURRENT TASK:
-Render: npm run render:video (muted, -> cache/scene-renders/video-noaudio.mp4), then npm run mux -> output/tiktok-automation-promo.mp4, then npm run qa.
+None. Project COMPLETE.
 
 NEXT:
-Vocal (Piper TTS id_ID + WORLD pitch retune) → SFX → mix → render → QA.
+Optional only: owner review of the video.
 
 KNOWN ISSUES:
 - Komputer lokal tidak bisa membuka r2.dev (tidak dibutuhkan untuk video).
@@ -42,11 +42,11 @@ npm run preview                    # Remotion Studio
 bash scripts/setup-audio-tools.sh  # re-download uv/Python/Piper/voice if .tools is missing
 cd scripts/audio && ../../.venv/Scripts/python.exe music.py && ../../.venv/Scripts/python.exe sing.py && ../../.venv/Scripts/python.exe sfx.py && ../../.venv/Scripts/python.exe mix.py
 
-LAST SUCCESSFUL TEST: npm run check (tsc) OK
-LAST SUCCESSFUL PREVIEW: stills frames 60–1315 (all 11 scenes) rendered OK
+LAST SUCCESSFUL TEST: npm run qa PASS (h264 1080x1920 30 fps, AAC 48 kHz stereo, 44.00 s, full decode clean, no black frames, audio peak -1.03 dBFS, RMS -16.8 dB)
+LAST SUCCESSFUL PREVIEW: cache/stills/final-sheet.jpg from the final MP4 (all 11 scenes present, text inside safe margins, Telegram low-stock scene visible, final frame correct)
 AUDIO STATUS: final-mix.wav done (regenerate: see RESUME). Stems music.wav, vocal.wav, sfx.wav generated in cache/audio (regenerable). Vocal QA: whisper.cpp small (id) on dry lead heard all lines; on full mix 10/11 lines recognisable (caption line weakest, lyric captions on screen cover it); minor: terjadwal/tercatat -> terjatuh, peringatan -> teringatan.
-RENDER STATUS: starting full render (1320 frames)
-FINAL OUTPUT: not created
+RENDER STATUS: done 10 Okt 2026 — 1320/1320 frames, cache/scene-renders/video-noaudio.mp4 (23.7 MB, muted) muxed with public/audio/final-mix.wav
+FINAL OUTPUT: promo-video/output/tiktok-automation-promo.mp4 — 25.6 MB, 1080x1920, 30 fps, 44.00 s, H.264 + AAC 320k stereo 48 kHz (gitignored; regenerate with npm run render:video && npm run mux)
 
 PRODUCTION SAFETY:
-All MCP use is read-only. No production change.
+All MCP use was read-only. n8n/Supabase/Cloudflare/Buffer/TikTok/Railway modified: NO. Credentials modified: NO. Production workflow executed: NO.
