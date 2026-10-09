@@ -1,7 +1,7 @@
 # PROGRESS — TikTok Automation Promo Video
 
 CURRENT CHECKPOINT:
-A6 — V2 COMPLETE (rendered and verified)
+B0 — before-elevenlabs-dila-v3 (V2 preserved)
 
 COMPLETED:
 [✓] 01 Repository audit (docs/AUDIT.md)
@@ -27,7 +27,7 @@ AUDIO OVERHAUL (V2):
 [✓] A6 Final render V2: output/tiktok-automation-promo-v2.mp4 — 1080x1920, 30 fps, 47.50 s, H.264 + AAC LC 48 kHz stereo (streams verified), full decode clean, no black frames, peak -1.36 dBFS. Audio decoded from the MP4 re-transcribed by whisper-turbo (CER 0.2%). "secara acak": text was already correct everywhere; the final /k/ was masked by a snare fill + whoosh at 10.5-11 s -> fill removed, whoosh moved to 11.12 s; now heard as "acak". V1 kept at output/tiktok-automation-promo-v1.mp4.
 
 CURRENT TASK:
-None. V2 COMPLETE.
+V3: ElevenLabs "Dila - Indonesia Voice Over & Announcer" narration, improved mix, render output/tiktok-automation-promo-v3.mp4.
 
 NEXT:
 Optional only: owner review of the video.
@@ -61,3 +61,10 @@ FINAL OUTPUT: V2 promo-video/output/tiktok-automation-promo-v2.mp4 (47.5 s, 1080
 
 PRODUCTION SAFETY:
 All MCP use was read-only. n8n/Supabase/Cloudflare/Buffer/TikTok/Railway modified: NO. Credentials modified: NO. Production workflow executed: NO.
+
+V3 (ELEVENLABS DILA):
+[✓] B0 before-elevenlabs-dila-v3: V2 kept at output/tiktok-automation-promo-v2.mp4; V2 audio stems + voiceover.v2.json + vo_timing.v2.json copied to cache/v2-audio/ (gitignored); V2 source = commit c1df37b
+[ ] B1 Dila narration generated (ElevenLabs MCP)
+[ ] B2 Pronunciation QA
+[ ] B3 Music/SFX/mix V3
+[ ] B4 Render V3 + QA
