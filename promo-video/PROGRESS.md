@@ -1,7 +1,7 @@
 # PROGRESS — TikTok Automation Promo Video
 
 CURRENT CHECKPOINT:
-12b — Marketing values update (brief = source of truth), re-render pending
+12 — COMPLETE (final MP4 re-rendered with creative-brief values and verified)
 
 COMPLETED:
 [✓] 01 Repository audit (docs/AUDIT.md)
@@ -18,7 +18,7 @@ COMPLETED:
 [✓] 12 Final MP4 rendered and verified
 
 CURRENT TASK:
-Re-render with brief values: schedule 08:00/12:00/18:00, 90 videos -> 9 left, FILE HASH check, THRESHOLD DETECTED / TELEGRAM ALERT labels, lyric line 6 re-sung. Then npm run render:video && npm run mux && npm run qa.
+None. Project COMPLETE.
 
 NEXT:
 Optional only: owner review of the video.
@@ -42,10 +42,10 @@ npm run preview                    # Remotion Studio
 bash scripts/setup-audio-tools.sh  # re-download uv/Python/Piper/voice if .tools is missing
 cd scripts/audio && ../../.venv/Scripts/python.exe music.py && ../../.venv/Scripts/python.exe sing.py && ../../.venv/Scripts/python.exe sfx.py && ../../.venv/Scripts/python.exe mix.py
 
-LAST SUCCESSFUL TEST: npm run qa PASS (h264 1080x1920 30 fps, AAC 48 kHz stereo, 44.00 s, full decode clean, no black frames, audio peak -1.03 dBFS, RMS -16.8 dB)
+LAST SUCCESSFUL TEST: npm run qa PASS (h264 1080x1920 30 fps, AAC 48 kHz stereo, 44.00 s, full decode clean, no black frames, audio peak -1.15 dBFS, RMS -16.8 dB)
 LAST SUCCESSFUL PREVIEW: cache/stills/final-sheet.jpg from the final MP4 (all 11 scenes present, text inside safe margins, Telegram low-stock scene visible, final frame correct)
 AUDIO STATUS: final-mix.wav done (regenerate: see RESUME). Stems music.wav, vocal.wav, sfx.wav generated in cache/audio (regenerable). Vocal QA: whisper.cpp small (id) on dry lead heard all lines; on full mix 10/11 lines recognisable (caption line weakest, lyric captions on screen cover it); minor: terjadwal/tercatat -> terjatuh, peringatan -> teringatan.
-RENDER STATUS: done 10 Okt 2026 — 1320/1320 frames, cache/scene-renders/video-noaudio.mp4 (23.7 MB, muted) muxed with public/audio/final-mix.wav
+RENDER STATUS: re-rendered 10 Okt 2026 with brief values (08:00/12:00/18:00, 90 -> 9 VIDEOS LEFT, FILE HASH, THRESHOLD DETECTED -> TELEGRAM ALERT); 1320/1320 frames, muxed with final-mix.wav
 FINAL OUTPUT: promo-video/output/tiktok-automation-promo.mp4 — 25.6 MB, 1080x1920, 30 fps, 44.00 s, H.264 + AAC 320k stereo 48 kHz (gitignored; regenerate with npm run render:video && npm run mux)
 
 PRODUCTION SAFETY:
