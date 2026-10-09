@@ -1,7 +1,7 @@
 # PROGRESS — TikTok Automation Promo Video
 
 CURRENT CHECKPOINT:
-A0 — CHECKPOINT — Before Audio Overhaul (V1 preserved)
+A1 — Voice script finalized
 
 COMPLETED:
 [✓] 01 Repository audit (docs/AUDIT.md)
@@ -19,7 +19,7 @@ COMPLETED:
 
 AUDIO OVERHAUL (V2):
 [✓] A0 Before Audio Overhaul: output/tiktok-automation-promo-v1.mp4 + cache/v1-audio/ preserved locally (gitignored); V1 source = commit d40e83b
-[ ] A1 Voice script finalized (male Indonesian voice-over, replaces sung vocal)
+[✓] A1 Voice script finalized: src/audio/voiceover.json (13 lines, natural Indonesian, male VO replaces the sung vocal; final scene extended to 46 s for the tagline)
 [ ] A2 Male voice finalized
 [ ] A3 Music finalized (new arrangement)
 [ ] A4 SFX finalized
@@ -27,12 +27,14 @@ AUDIO OVERHAUL (V2):
 [ ] A6 Final render V2 -> output/tiktok-automation-promo-v2.mp4
 
 CURRENT TASK:
-Audit local male Indonesian TTS options and finalize voice-over script.
+Male voice: Chatterbox-TTS-Indonesian (Apache-2.0) + original designed male timbre (Qwen3-TTS VoiceDesign, no real person). Takes scored by UTMOS + whisper WER (scripts/voice).
 
 NEXT:
 Optional only: owner review of the video.
 
 KNOWN ISSUES:
+- Voice audit (3 test lines, UTMOS predicted MOS / whisper WER): Qwen3 Indonesian fine-tune 2.4-2.7 / 0.22-0.33 (rejected), Qwen3 Base clone 4.5 / 0.12-0.25 (English accent, rejected), Windows Andika 2.8-3.3 / 0-0.13 (robotic, rejected), Chatterbox-Indonesian + designed male ref 4.1-4.4 / 0-0.25 (chosen, best-take selection).
+- GPU venvs (gitignored): .venv-tts (torch 2.6 cu124, qwen-tts 0.1.1, librosa, jiwer), .venv-cb (chatterbox-tts 0.1.4 --no-deps, transformers 4.46.3, setuptools<80). Models cached in .hf/.
 - Komputer lokal tidak bisa membuka r2.dev (tidak dibutuhkan untuk video).
 - Tidak ada Python/FFmpeg sistem: Python portabel via uv di `.tools/` + `.venv/` (gitignored), FFmpeg dari ffmpeg-static.
 - Timing tunggal untuk gambar dan suara: src/audio/song.json.

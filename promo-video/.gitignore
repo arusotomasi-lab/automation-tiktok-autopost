@@ -8,3 +8,6 @@ cache/**/*
 public/audio/*.wav
 .env
 *.log
+.venv-tts/
+.venv-cb/
+.hf/
