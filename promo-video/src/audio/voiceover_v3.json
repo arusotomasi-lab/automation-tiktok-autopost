@@ -1,0 +1,20 @@
+{
+ "_doc": "V3 narration: ElevenLabs eleven_v4, language id, voice Maliq Nganjuk (EIcz16yo4q5hJFhNay0n), chosen from a 3-voice Free-plan audition (Widi Wijaya, Maliq, Denas). 'say' = text sent to ElevenLabs, 'text' = subtitle.",
+ "voice_id": "EIcz16yo4q5hJFhNay0n",
+ "model_id": "eleven_v4",
+ "lines": [
+  {"id": "01_open", "at": 0.3, "text": "Tiga akun TikTok. Satu sistem yang bekerja otomatis.", "say": "Tiga akun TikTok. Satu sistem… yang bekerja otomatis."},
+  {"id": "02_ware", "at": 4.25, "text": "Kamu cukup siapkan videonya.", "say": "Kamu cukup siapkan videonya."},
+  {"id": "03_pick", "at": 8.05, "text": "Sistem memilih kontennya, secara acak dan otomatis.", "say": "Sistem memilih kontennya, secara acak dan otomatis."},
+  {"id": "04_dup", "at": 11.1, "text": "Setiap video diperiksa, supaya konten yang sama tidak terunggah dua kali.", "say": "Setiap video diperiksa, supaya konten yang sama tidak terunggah dua kali."},
+  {"id": "05_ai", "at": 15.25, "text": "Hook, caption, dan hashtag disiapkan otomatis.", "say": "Hook, caption, dan hashtag… disiapkan otomatis."},
+  {"id": "06_sched", "at": 20.15, "text": "Setiap akun berjalan sesuai jadwalnya.", "say": "Setiap akun berjalan sesuai jadwalnya."},
+  {"id": "07_pub", "at": 24.3, "text": "Lalu konten dikirim, dan dipublikasikan secara otomatis.", "say": "Lalu konten dikirim, dan dipublikasikan secara otomatis."},
+  {"id": "08_ok", "at": 30.15, "text": "Tiga akun. Tanpa upload manual setiap hari.", "say": "Tiga akun. Tanpa upload manual, setiap hari."},
+  {"id": "09_arch", "at": 33.1, "text": "Video yang sudah tayang langsung masuk ke arsip.", "say": "Video yang sudah tayang, langsung masuk ke arsip."},
+  {"id": "10_stock", "at": 36.05, "text": "Dan ketika stok mulai menipis…", "say": "Dan ketika stok mulai menipis…"},
+  {"id": "11_alert", "at": 38.0, "text": "…sistem langsung mengirim peringatan.", "say": "sistem langsung mengirim peringatan."},
+  {"id": "12_final", "at": 40.45, "text": "Kamu siapkan kontennya. Sistem yang mengerjakan sisanya.", "say": "Kamu siapkan kontennya. Sistem yang mengerjakan sisanya."},
+  {"id": "13_tag", "at": 44.3, "text": "Upload sekali. Otomatiskan semuanya.", "say": "Upload sekali. Otomatiskan semuanya."}
+ ]
+}

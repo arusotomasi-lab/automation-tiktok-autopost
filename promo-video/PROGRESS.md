@@ -64,7 +64,7 @@ All MCP use was read-only. n8n/Supabase/Cloudflare/Buffer/TikTok/Railway modifie
 
 V3 (ELEVENLABS DILA):
 [✓] B0 before-elevenlabs-dila-v3: V2 kept at output/tiktok-automation-promo-v2.mp4; V2 audio stems + voiceover.v2.json + vo_timing.v2.json copied to cache/v2-audio/ (gitignored); V2 source = commit c1df37b
-[ ] B1 Dila narration generated (ElevenLabs MCP) — BLOCKED: voice_id vkW2LzXraZVeZ5G7Yv7c (from owner) rejected by ElevenLabs: "You need to be on the creator tier or above to use this voice." (estimate_only, eleven_v4; flow VYwxn1znn0814e9e2KEa created, empty). Needs ElevenLabs Creator plan or higher on this workspace. No credits spent.
+[ ] B1 V3 narration — BLOCKED (10 Okt 2026, ~04:43 WIB): Dila needs Creator tier (owner dropped Dila). Free-plan audition (eleven_v4, language id, same text): Widi Wijaya 5YVVTVlHuEcIu0JBLbEF (124 Hz, MOS 3.28), Maliq Nganjuk EIcz16yo4q5hJFhNay0n (111 Hz, MOS 3.30, chosen), Denas arwfiAiEfIHHZCwcYYx2 (119 Hz, MOS 2.89); all transcribed correctly. While generating the 13 lines, ElevenLabs disabled Free Tier for this account: "Unusual activity has been detected on your account, so Free Tier access has been disabled... Please upgrade to a paid subscription to continue." Only 4/13 lines finished (04, 06, 07, 12) -> cache/voice/v3/ (gitignored) with the 3 audition samples. Script: src/audio/voiceover_v3.json. Flow VYwxn1znn0814e9e2KEa.
 [ ] B2 Pronunciation QA
 [ ] B3 Music/SFX/mix V3
 [ ] B4 Render V3 + QA
