@@ -7,11 +7,12 @@ import os
 import numpy as np
 from dsp import SR, CACHE, ROOT, n, sine, noise, adsr, expdec, biquad, reverb_ir, reverb, pan, place, write, song
 
-OUT = os.path.join(CACHE, 'v2')
+VER = os.environ.get('AUDIO_VER', 'v2')  # v2 = Chatterbox voice, v3 = Edge TTS Ardi
+OUT = os.path.join(CACHE, VER)
 S = song()
 DUR = S['duration'] + 2.0
 cues = {}
-cp = os.path.join(ROOT, 'cache', 'voice', 'v2', 'vo_cues.json')
+cp = os.path.join(ROOT, 'cache', 'voice', os.environ.get('AUDIO_VER', 'v2'), 'vo_cues.json')
 if os.path.exists(cp):
     cues = json.load(open(cp, encoding='utf-8'))
 TAG = float(cues.get('tag_start', 44.7))
@@ -158,7 +159,7 @@ def shimmer(d=2.6):
 trans = np.zeros((2, n(DUR)))   # transitions / camera
 det = np.zeros((2, n(DUR)))     # UI detail
 # scene transitions (push-through camera): soft cinematic whooshes, alternating direction
-for i, t in enumerate([3.78, 7.8, 11.12, 14.8, 19.8, 23.8, 29.8, 32.8, 35.8, 39.75]):
+for i, t in enumerate([3.78, 7.8, 11.12, 14.8, 19.8, 23.8, 29.8, 32.8, 36.08, 39.75]):
     place(trans, whoosh(0.62, 400, 3800, 10 + i, -0.7 if i % 2 else 0.7, 0.7 if i % 2 else -0.7), t - 0.25, 0.42)
 # opening: three cards fly in, chips light, lines connect, core appears
 for k, t in enumerate([0.2, 0.43, 0.67]):
@@ -187,8 +188,8 @@ place(det, pan(blocked(), 0.6), 12.73, 0.4)
 place(det, pan(confirm(2093), 0), 13.47, 0.55)
 # AI caption engine
 place(det, swipe(0.45, 33, False), 14.85, 0.28)
-place(det, pan(energy(0.6, 150, 2200), 0), 15.0, 0.25)
-place(det, pan(data_texture(2.6, 4), 0), 15.4, 0.35)
+# (no energy sweep at 15.0: it masked the first word 'Hook' of the narration)
+place(det, pan(data_texture(2.4, 4), 0), 15.7, 0.35)
 for k, t in enumerate([15.8, 16.4, 17.0]):
     place(det, pan(typing(0.85, k), 0.15 * (k - 1)), t, 0.32)
 for k, t in enumerate([18.07, 18.33, 18.6]):

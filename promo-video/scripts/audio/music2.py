@@ -10,14 +10,15 @@ from scipy import signal
 from dsp import (SR, CACHE, ROOT, n, mtof, sine, saw, square, noise, adsr, expdec, biquad, reverb_ir, reverb, pingpong,
                  pan, place, write, song, soft_clip)
 
-OUT = os.path.join(CACHE, 'v2')
+VER = os.environ.get('AUDIO_VER', 'v2')  # v2 = Chatterbox voice, v3 = Edge TTS Ardi
+OUT = os.path.join(CACHE, VER)
 os.makedirs(OUT, exist_ok=True)
 S = song()
 DUR = S['duration'] + 2.0
 BEAT = 60 / S['bpm']
 BAR = 4 * BEAT
 CUES = {}
-cue_path = os.path.join(ROOT, 'cache', 'voice', 'v2', 'vo_cues.json')
+cue_path = os.path.join(ROOT, 'cache', 'voice', os.environ.get('AUDIO_VER', 'v2'), 'vo_cues.json')
 if os.path.exists(cue_path):
     CUES = json.load(open(cue_path, encoding='utf-8'))
 T_HIT = float(CUES.get('final_hit', 44.75))  # start of "Otomatiskan semuanya" -> biggest impact
@@ -252,7 +253,7 @@ for t in at_beats(20, 33, BEAT / 4):
 for t in at_beats(8, 33, BEAT, BEAT / 2):
     place(L['drums'], pan(HO, 0.2), t, 0.11 if t >= 20 else 0.07)
 # claps / snares on 2 & 4
-for t in at_beats(15, 33, BEAT):
+for t in at_beats(16, 33, BEAT):  # claps from 16.0 so the first word "Hook" (15.25) stays clear
     if round(t / BEAT) % 4 in (1, 3):
         place(L['drums'], pan(CL, 0.05), t, 0.42)
         if t >= 24:
@@ -264,7 +265,7 @@ for k, t in enumerate(np.arange(23.0, 24.0, BEAT / 4)):
 for k, t in enumerate(np.arange(38.0, 40.0, BEAT / 4)):
     place(L['drums'], pan(SN, 0), t, 0.08 + 0.32 * (k / 16) ** 1.7)
 # crashes on section downbeats
-for t, g in [(4.0, 0.25), (15.0, 0.3), (24.0, 0.55), (30.0, 0.45), (40.0, 0.6), (T_HIT, 0.7)]:
+for t, g in [(4.0, 0.25), (15.0, 0.1), (24.0, 0.55), (30.0, 0.45), (40.0, 0.6), (T_HIT, 0.7)]:
     place(L['drums'], pan(crash(), 0.1), t, g)
 # syncopated digital percussion (8-36) + scanner rhythm (11-15)
 synco = [0, 3, 6, 10, 12, 14]
@@ -323,7 +324,7 @@ L['pad'] = chorus(tv_lp(L['pad'], cut, 0.7), 5, 0.4, 0.45)
 
 # ---------- arp (AI caption -> drop) ----------
 pattern = [0, 2, 1, 3, 2, 1, 3, 2]
-for k, t in enumerate(np.arange(15.0, 36.0, BEAT / 4)):
+for k, t in enumerate(np.arange(15.75, 36.0, BEAT / 4)):  # enters right after the word "Hook" (15.25-15.6)
     notes, _ = CH[chord_at(t)]
     m = notes[pattern[k % 8]] + 12
     bright = 2500 if t < 24 else 4500
@@ -333,7 +334,7 @@ for k, t in enumerate(np.arange(15.0, 36.0, BEAT / 4)):
     if 33 <= t < 36:
         g = 0.06
     place(L['arp'], pan(pluck(m, 0.28, bright), 0.4 * np.sin(k * 0.6)), t, g)
-for k, t in enumerate(np.arange(8.0, 15.0, BEAT / 2)):  # sparse intro arp from the selection scene
+for k, t in enumerate(np.arange(8.0, 14.75, BEAT / 2)):  # sparse intro arp from the selection scene
     notes, _ = CH[chord_at(t)]
     place(L['arp'], pan(pluck(notes[k % 4] + 12, 0.35, 1500), 0.3 * np.sin(k)), t, 0.07)
 L['arp'] = pingpong(L['arp'], BEAT * 0.75, fb=0.38, mix=0.32)

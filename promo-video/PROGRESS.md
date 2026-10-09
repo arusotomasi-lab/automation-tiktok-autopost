@@ -1,7 +1,7 @@
 # PROGRESS — TikTok Automation Promo Video
 
 CURRENT CHECKPOINT:
-B0 — before-elevenlabs-dila-v3 (V2 preserved)
+B3 — V3 audio done (Edge TTS Ardi), pre-render
 
 COMPLETED:
 [✓] 01 Repository audit (docs/AUDIT.md)
@@ -27,7 +27,7 @@ AUDIO OVERHAUL (V2):
 [✓] A6 Final render V2: output/tiktok-automation-promo-v2.mp4 — 1080x1920, 30 fps, 47.50 s, H.264 + AAC LC 48 kHz stereo (streams verified), full decode clean, no black frames, peak -1.36 dBFS. Audio decoded from the MP4 re-transcribed by whisper-turbo (CER 0.2%). "secara acak": text was already correct everywhere; the final /k/ was masked by a snare fill + whoosh at 10.5-11 s -> fill removed, whoosh moved to 11.12 s; now heard as "acak". V1 kept at output/tiktok-automation-promo-v1.mp4.
 
 CURRENT TASK:
-V3: ElevenLabs "Dila - Indonesia Voice Over & Announcer" narration, improved mix, render output/tiktok-automation-promo-v3.mp4.
+Render V3: npm run render:video variant -> cache/scene-renders/video-noaudio-v3.mp4, mux public/audio/final-mix-v3.wav -> output/tiktok-automation-promo-v3.mp4, QA.
 
 NEXT:
 Optional only: owner review of the video.
@@ -68,3 +68,6 @@ V3 (ELEVENLABS DILA):
 [ ] B2 Pronunciation QA
 [ ] B3 Music/SFX/mix V3
 [ ] B4 Render V3 + QA
+[✓] B1b ElevenLabs dropped for V3 (Free tier disabled). V3 narration = Microsoft Edge TTS id-ID-ArdiNeural (male), rate +0%, pitch -5Hz (grid -5%/0% x -2/-5Hz tested; all CER 0). ElevenLabs takes in cache/voice/v3/ are NOT used.
+[✓] B2 Pronunciation QA: every line transcribed inside the full mix by whisper-turbo with CER 0 ("secara acak", Hook, caption, hashtag, diarsipkan, stok, peringatan). Fixes: TTS spelling "Huk" for Hook; arsip line -> "langsung diarsipkan"; arp/claps start after "Hook" (15.75/16.0 s); crash at 15 s lowered; energy SFX at 15 s removed; whoosh after archive line moved to 36.08 s; transition SFX ducked 6 dB under voice.
+[✓] B3 Mix V3: public/audio/final-mix-v3.wav (AUDIO_VER=v3 for music2/sfx2/mix2): 47.5 s, ~-14.1 LUFS, 0 clipped, voice +8.9 dB over music (ducked 5 dB), +11.1 dB over SFX, music +5.2 dB in gaps.
